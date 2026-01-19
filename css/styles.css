@@ -8,35 +8,30 @@
   font-weight: 300;
   font-style: normal;
 }
-
 @font-face {
   font-family: "Futura";
   src: url("../assets/fonts/Futura100-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
 }
-
 @font-face {
   font-family: "Futura";
   src: url("../assets/fonts/Futura100-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
 }
-
 @font-face {
   font-family: "Futura";
   src: url("../assets/fonts/Futura100-Demibold.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
 }
-
 @font-face {
   font-family: "Futura";
   src: url("../assets/fonts/Futura100-Bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
 }
-
 @font-face {
   font-family: "Futura";
   src: url("../assets/fonts/Futura100-BookOblique.otf") format("opentype");
@@ -49,13 +44,14 @@
    ========================= */
 
 :root{
-  --header: #171a1a;
+  --header: #212221;
   --projects-bg: #f1eee7;
   --awards-bg: #1b1f1e;
   --orange: #d0662b;
 
   --container: 1120px;
   --pad: 22px;
+  --header-height: 80px;
 }
 
 *{
@@ -73,7 +69,7 @@ body{
 }
 
 /* =========================
-   Layout helpers
+   Helpers
    ========================= */
 
 .container{
@@ -101,14 +97,16 @@ body{
 }
 
 .header-inner{
-  height: 64px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+/* 🔥 BIGGER LOGO */
 .brand-logo{
-  height: 28px;
+  height: 50px; /* adjust to 40–52px if you want */
+  width: auto;
 }
 
 .site-nav{
@@ -128,41 +126,36 @@ body{
 }
 
 /* =========================
-   HERO (BLEND MODE WORKS)
+   HERO (FULL PAGE)
    ========================= */
 
 .hero{
   position: relative;
-  height: 72vh;
-  min-height: 520px;
+  height: calc(100vh - var(--header-height));
+  min-height: calc(100vh - var(--header-height));
   overflow: hidden;
-
-  /* REQUIRED for blend mode */
-  isolation: isolate;
 }
 
-/* Hero image — constrained, cropped */
+/* hero image fills page */
 .hero-bg{
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   z-index: 0;
 }
 
-/* p5 canvas — DOES NOT interfere */
+/* p5 canvas (safe layer) */
 .hero-canvas{
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-
-  /* IMPORTANT */
-  mix-blend-mode: normal;
 }
 
-/* Text layer */
+/* text container */
 .hero-inner{
   position: relative;
   z-index: 2;
@@ -172,23 +165,33 @@ body{
   justify-content: center;
 }
 
-/* ✅ ACTUAL DIFFERENCE BLEND */
+/* ✅ SAFE “DIFFERENCE-STYLE” TEXT */
 .hero-title{
   margin: 0;
-  max-width: 820px;
+  max-width: 860px;
 
-  font-size: clamp(28px, 3.2vw, 54px);
+  font-size: clamp(32px, 3.5vw, 58px);
   font-weight: 800;
   line-height: 1.12;
 
-  color: white;
-  mix-blend-mode: difference;
+  /* same image as hero */
+  background-image: url("../assets/img/hero.jpg");
+  background-size: cover;
+  background-position: center;
 
-  /* Shadows break clarity — keep off */
+  /* text masking */
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* invert = difference look */
+  filter: invert(1);
+
+  /* clarity */
   text-shadow: none;
 }
 
-/* Hero credit */
+/* credit */
 .hero-credit{
   position: absolute;
   right: 18px;
@@ -198,19 +201,16 @@ body{
   z-index: 2;
 }
 
-/* Scroll arrow */
+/* scroll indicator */
 .hero-scroll{
   position: absolute;
   left: 50%;
-  bottom: 16px;
+  bottom: 18px;
   transform: translateX(-50%);
   font-size: 28px;
   color: rgba(255,255,255,.85);
   text-decoration: none;
   z-index: 2;
-}
-.dot{
-  color:var(--orange);
 }
 
 /* =========================
@@ -305,17 +305,13 @@ body{
 
 @media (max-width: 900px){
 
-  .nav-toggle{
-    display: inline-flex;
-  }
-
-  .site-nav{
-    display: none;
-  }
-
   .hero-inner{
     justify-content: flex-start;
-    padding-top: 80px;
+    padding-top: 90px;
+  }
+
+  .hero-title{
+    font-size: clamp(30px, 6vw, 46px);
   }
 
   .project-grid{
