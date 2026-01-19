@@ -105,7 +105,7 @@ body{
 
 /* 🔥 BIGGER LOGO */
 .brand-logo{
-  height: 50px; /* adjust to 40–52px if you want */
+  height: 3em; /* adjust to 40–52px if you want */
   width: auto;
 }
 
