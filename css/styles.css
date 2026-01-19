@@ -180,12 +180,12 @@ body{
   background-position: center;
 
   /* text masking */
-  color: transparent;
+  color: rgba(0,0,0,.35);
   -webkit-background-clip: text;
   background-clip: text;
 
   /* invert = difference look */
-  filter: invert(1);
+  mix-blend-mode: difference;
 
   /* clarity */
   text-shadow: none;
@@ -212,21 +212,24 @@ body{
   text-decoration: none;
   z-index: 2;
 }
-
+.hero-dot{
+  color: rgba(255, 101, 0, 0.639);
+}
 /* =========================
    Projects
    ========================= */
 
 .projects{
   background: var(--projects-bg);
-  padding: 70px 0 90px;
+  padding: 1em 0 1em;
 }
 
 .section-title{
   text-align: center;
-  font-size: 40px;
+  font-size: 65px;
   margin-bottom: 40px;
-  color: var(--orange);
+  margin-top: 40px;
+  color:rgba(255, 101, 0);
 }
 
 .project-grid{
