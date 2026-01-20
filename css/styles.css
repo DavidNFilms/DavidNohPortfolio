@@ -95,6 +95,12 @@ body{
   position: relative;
   z-index: 50;
 }
+.scroll-arrow{
+  width: 64px;   /* adjust size here */
+  height: auto;
+  display: block;
+}
+
 
 .header-inner{
   height: var(--header-height);
