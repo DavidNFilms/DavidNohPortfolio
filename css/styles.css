@@ -110,7 +110,7 @@ body{
 }
 
 .hero-inner{
-  position:relative;
+  position:relative; /* keeps credit + arrow positioned correctly */
   z-index:2;
   height:100%;
   display:flex;
@@ -178,6 +178,29 @@ body{
   color:rgba(255,101,0);
 }
 
+/* Base grid for non-SMI pages (kept simple) */
+.project-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:26px;
+  max-width:980px;
+  margin:0 auto;
+}
+
+.project-card{
+  margin:0;
+  background:white;
+  border:1px solid rgba(0,0,0,.2);
+  overflow:hidden;
+}
+
+.project-card img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
 /* =========================
    Awards / Contact
    ========================= */
@@ -211,38 +234,41 @@ body{
   .hero-title{
     font-size:clamp(30px, 6vw, 46px);
   }
+
+  .project-grid{
+    grid-template-columns:1fr;
+    max-width:520px;
+  }
 }
 
 /* =======================================================
    STILL & MOVING IMAGES (SCOPED)
-   Wide + 3-column column-flow masonry (no crop)
+   3-column column-flow masonry (NO CROP) + balance
    ======================================================= */
 
 .smi .projects{
   padding:80px 0 100px;
 }
 
-/* widen the layout to fill the page */
+/* wider container on SMI page */
 .smi .container{
-  width: min(1600px, 100% - 24px);
+  width:min(1700px, 100% - 24px);
 }
 
-/* let blocks go full width (no extra inner max-width) */
+/* let sections breathe across the width */
 .smi .project-block{
   max-width:none;
   margin:0 auto 80px;
   padding:0;
 }
 
-.smi .project-header{ margin-bottom:18px; }
-
-/* shrink section title for this page (still orange) */
+/* nicer header sizing on SMI page */
 .smi .section-title{
   font-size:clamp(28px, 3.2vw, 44px);
   margin:20px 0 18px;
 }
 
-/* optional title/subtitle styles */
+/* optional title/subtitle */
 .smi .project-title{
   font-size:clamp(26px, 3vw, 42px);
   margin:0;
@@ -253,17 +279,27 @@ body{
   opacity:0.8;
 }
 
-/* ✅ Fix 2 + 3 columns + natural ratios */
+/* ✅ FORCE column-flow masonry and prevent "huge first items" */
 .smi .project-grid{
-  column-count: 3;
-  column-gap: 22px;
-  column-fill: balance; /* Fix 2 */
+  display:block;           /* overrides the base grid */
+  column-count:3;
+  column-gap:22px;
+  column-fill:balance;     /* Fix 2 */
+  max-width:none;
+  margin:0;               /* no centering */
 }
 
-/* keep figures from splitting */
+/* each card behaves properly inside columns */
 .smi .project-card{
-  break-inside: avoid;
-  margin: 0 0 22px 0;
+  display:inline-block;    /* important for consistent column sizing */
+  width:100%;
+  break-inside:avoid;
+  margin:0 0 22px 0;
+
+  /* remove the base "card" look for SMI (optional but matches your screenshots) */
+  background:none;
+  border:none;
+  overflow:visible;
 }
 
 /* never crop */
@@ -271,14 +307,16 @@ body{
   width:100%;
   height:auto;
   display:block;
+  object-fit:initial;
   border-radius:18px;
 }
 
 /* responsive: 3 → 2 → 1 */
 @media (max-width:1200px){
-  .smi .project-grid{ column-count: 2; }
+  .smi .project-grid{ column-count:2; }
 }
 
 @media (max-width:700px){
-  .smi .project-grid{ column-count: 1; }
+  .smi .project-grid{ column-count:1; }
 }
+
