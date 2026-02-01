@@ -2,63 +2,34 @@
    Custom Fonts – Futura
    ========================= */
 
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-Light.otf") format("opentype");
-  font-weight: 300;
-}
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-Regular.otf") format("opentype");
-  font-weight: 400;
-}
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-Medium.otf") format("opentype");
-  font-weight: 500;
-}
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-Demibold.otf") format("opentype");
-  font-weight: 600;
-}
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-Bold.otf") format("opentype");
-  font-weight: 700;
-}
-@font-face {
-  font-family: "Futura";
-  src: url("../assets/fonts/Futura100-BookOblique.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
-}
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Light.otf") format("opentype"); font-weight:300; }
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Regular.otf") format("opentype"); font-weight:400; }
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Medium.otf") format("opentype"); font-weight:500; }
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Demibold.otf") format("opentype"); font-weight:600; }
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Bold.otf") format("opentype"); font-weight:700; }
+@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-BookOblique.otf") format("opentype"); font-weight:400; font-style:italic; }
 
 /* =========================
    Global
    ========================= */
 
 :root{
-  --header: #212221;
-  --projects-bg: #f1eee7;
-  --awards-bg: #1b1f1e;
-  --orange: #d0662b;
+  --header:#212221;
+  --projects-bg:#f1eee7;
+  --awards-bg:#1b1f1e;
+  --orange:#d0662b;
 
-  --container: 1120px;
-  --pad: 22px;
-  --header-height: 80px;
+  --container:1120px;
+  --pad:22px;
+  --header-height:80px;
 }
 
-*{ box-sizing: border-box; }
-
-html, body{
-  margin: 0;
-  padding: 0;
-}
+*{ box-sizing:border-box; }
+html, body{ margin:0; padding:0; }
 
 body{
-  font-family: "Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #111;
+  font-family:"Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#111;
 }
 
 /* =========================
@@ -66,8 +37,8 @@ body{
    ========================= */
 
 .container{
-  width: min(var(--container), 100% - (var(--pad) * 2));
-  margin-inline: auto;
+  width:min(var(--container), 100% - (var(--pad) * 2));
+  margin-inline:auto;
 }
 
 .sr-only{
@@ -75,7 +46,7 @@ body{
   width:1px;
   height:1px;
   overflow:hidden;
-  clip: rect(0,0,0,0);
+  clip:rect(0,0,0,0);
 }
 
 /* =========================
@@ -83,273 +54,231 @@ body{
    ========================= */
 
 .site-header{
-  background: var(--header);
-  color: white;
-  position: relative;
-  z-index: 50;
+  background:var(--header);
+  color:white;
+  position:relative;
+  z-index:50;
 }
 
 .header-inner{
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  height:var(--header-height);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.brand-logo{
-  height: 3em;
-}
+.brand-logo{ height:3em; }
 
 .site-nav{
-  display: flex;
-  gap: 26px;
+  display:flex;
+  gap:26px;
 }
 
 .site-nav a{
-  color: rgba(255,255,255,.9);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
+  color:rgba(255,255,255,.9);
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
 }
 
-.nav-toggle{ display: none; }
+.nav-toggle{ display:none; }
 
 /* =========================
    HERO
    ========================= */
 
 .hero{
-  position: relative;
-  height: calc(100vh - var(--header-height));
-  overflow: hidden;
+  position:relative;
+  height:calc(100vh - var(--header-height));
+  overflow:hidden;
 }
 
-/* background image */
 .hero-bg{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
 }
 
-/* canvas layer */
 .hero-canvas{
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
 }
 
-/* text + overlays */
 .hero-inner{
-  position: relative;     /* CRITICAL */
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* hero title */
 .hero-title{
-  margin: 0;
-  max-width: 860px;
-  font-size: clamp(32px, 3.5vw, 58px);
-  font-weight: 800;
-  line-height: 1.12;
+  margin:0;
+  max-width:860px;
+  font-size:clamp(32px, 3.5vw, 58px);
+  font-weight:800;
+  line-height:1.12;
 
-  background-image: url("../assets/img/hero.jpg");
-  background-size: cover;
-  background-position: center;
+  background-image:url("../assets/img/hero.jpg");
+  background-size:cover;
+  background-position:center;
 
-  color: rgba(0,0,0,.35);
-  -webkit-background-clip: text;
-  background-clip: text;
-  mix-blend-mode: difference;
+  color:rgba(0,0,0,.35);
+  -webkit-background-clip:text;
+  background-clip:text;
+  mix-blend-mode:difference;
 }
 
-/* hero credit (bottom-right) */
 .hero-credit{
-  position: absolute;
-  right: 18px;
-  bottom: 18px;
-  font-size: 11px;
-  color: rgba(255,255,255,.75);
-  z-index: 10;
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  font-size:11px;
+  color:rgba(255,255,255,.75);
+  z-index:10;
 }
 
-/* scroll arrow */
 .hero-scroll{
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  z-index: 10;
-  line-height: 0;
-  text-decoration: none;
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:10;
+  line-height:0;
+  text-decoration:none;
 }
 
-.hero-scroll svg{
-  display: block;
-}
+.hero-scroll svg{ display:block; }
 
 .scroll-arrow{
-  width: 64px;
-  height: auto;
-  display: block;
+  width:64px;
+  height:auto;
+  display:block;
 }
 
 /* =========================
-   PROJECTS – MAIN SITE
+   Projects base
    ========================= */
 
 .projects{
-  background: var(--projects-bg);
-  padding: 1em 0;
+  background:var(--projects-bg);
+  padding:1em 0;
 }
 
 .section-title{
-  text-align: center;
-  font-size: 65px;
-  margin: 40px 0;
-  color: rgba(255,101,0);
-}
-
-.project-grid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
-  max-width: 980px;
-  margin: 0 auto;
-}
-
-.project-card{
-  aspect-ratio: 3 / 4;
-  background: white;
-  border: 1px solid rgba(0,0,0,.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.project-card img{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  text-align:center;
+  font-size:65px;
+  margin:40px 0;
+  color:rgba(255,101,0);
 }
 
 /* =========================
-   AWARDS
+   Awards / Contact
    ========================= */
 
 .awards{
-  background: var(--awards-bg);
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background:var(--awards-bg);
+  min-height:60vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .awards-title{
-  font-size: 48px;
-  color: rgba(255,255,255,.95);
-  font-weight: 900;
+  font-size:48px;
+  color:rgba(255,255,255,.95);
+  font-weight:900;
 }
 
-/* =========================
-   CONTACT
-   ========================= */
-
-.contact{
-  padding: 60px 0 90px;
-}
+.contact{ padding:60px 0 90px; }
 
 /* =========================
-   RESPONSIVE (BASE)
+   Responsive base
    ========================= */
 
-@media (max-width: 900px){
+@media (max-width:900px){
   .hero-inner{
-    justify-content: flex-start;
-    padding-top: 90px;
+    justify-content:flex-start;
+    padding-top:90px;
   }
 
   .hero-title{
-    font-size: clamp(30px, 6vw, 46px);
-  }
-
-  .project-grid{
-    grid-template-columns: 1fr;
-    max-width: 520px;
+    font-size:clamp(30px, 6vw, 46px);
   }
 }
 
 /* =======================================================
-   STILL & MOVING IMAGES PAGE (SCOPED)
-   Requires: <body class="smi">
+   STILL & MOVING IMAGES (SCOPED)
+   Wide + 3-column column-flow masonry (no crop)
    ======================================================= */
 
 .smi .projects{
-  padding: 80px 0 100px;
+  padding:80px 0 100px;
 }
 
-/* section wrapper */
+/* widen the layout to fill the page */
+.smi .container{
+  width: min(1600px, 100% - 24px);
+}
+
+/* let blocks go full width (no extra inner max-width) */
 .smi .project-block{
-  max-width: 1400px;
-  margin: 0 auto 80px;
-  padding: 0 var(--pad);
+  max-width:none;
+  margin:0 auto 80px;
+  padding:0;
 }
 
-/* headers */
-.smi .project-header{
-  margin-bottom: 18px;
+.smi .project-header{ margin-bottom:18px; }
+
+/* shrink section title for this page (still orange) */
+.smi .section-title{
+  font-size:clamp(28px, 3.2vw, 44px);
+  margin:20px 0 18px;
 }
 
+/* optional title/subtitle styles */
 .smi .project-title{
-  font-size: clamp(26px, 3vw, 42px);
-  margin: 0;
+  font-size:clamp(26px, 3vw, 42px);
+  margin:0;
 }
-
 .smi .project-subtitle{
-  margin: 6px 0 0;
-  max-width: 70ch;
-  opacity: 0.8;
+  margin:6px 0 0;
+  max-width:70ch;
+  opacity:0.8;
 }
 
-/* grid with mixed aspect ratios */
+/* ✅ Fix 2 + 3 columns + natural ratios */
 .smi .project-grid{
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 22px;
-  align-items: start;
-  max-width: none;
+  column-count: 3;
+  column-gap: 22px;
+  column-fill: balance; /* Fix 2 */
 }
 
-/* cards — NO forced ratio */
+/* keep figures from splitting */
 .smi .project-card{
-  grid-column: span 6;      /* 3-up desktop */
-  aspect-ratio: auto;
-  height: auto;
-  overflow: visible;
-  background: none;
-  border: none;
+  break-inside: avoid;
+  margin: 0 0 22px 0;
 }
 
-/* images keep natural ratio */
+/* never crop */
 .smi .project-card img{
-  position: static;
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: initial;
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:18px;
 }
 
-/* mobile */
-@media (max-width: 900px){
-  .smi .project-card{
-    grid-column: span 12;
-  }
+/* responsive: 3 → 2 → 1 */
+@media (max-width:1200px){
+  .smi .project-grid{ column-count: 2; }
+}
+
+@media (max-width:700px){
+  .smi .project-grid{ column-count: 1; }
 }
