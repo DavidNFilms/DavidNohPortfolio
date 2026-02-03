@@ -2,242 +2,327 @@
    Custom Fonts – Futura
    ========================= */
 
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Light.otf") format("opentype"); font-weight:300; }
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Regular.otf") format("opentype"); font-weight:400; }
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Medium.otf") format("opentype"); font-weight:500; }
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Demibold.otf") format("opentype"); font-weight:600; }
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-Bold.otf") format("opentype"); font-weight:700; }
-@font-face { font-family:"Futura"; src:url("../assets/fonts/Futura100-BookOblique.otf") format("opentype"); font-weight:400; font-style:italic; }
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-Light.otf") format("opentype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-Regular.otf") format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-Medium.otf") format("opentype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-Demibold.otf") format("opentype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-Bold.otf") format("opentype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Futura";
+  src: url("../assets/fonts/Futura100-BookOblique.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
 
 /* =========================
    Global
    ========================= */
 
-:root{
-  --header:#212221;
-  --projects-bg:#f1eee7;
-  --awards-bg:#1b1f1e;
-  --orange:#d0662b;
+:root {
+  --header: #212221;
+  --projects-bg: #f1eee7;
+  --awards-bg: #1b1f1e;
+  --orange: rgba(255, 101, 0);
 
-  --container:1120px;
-  --pad:22px;
-  --header-height:80px;
+  --container: 1120px;
+  --pad: 22px;
+  --header-height: 80px;
 }
 
-*{ box-sizing:border-box; }
-html, body{ margin:0; padding:0; }
+* {
+  box-sizing: border-box;
+}
 
-body{
-  font-family:"Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:#111;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #111;
+  opacity: 0;
+  transition: opacity ease-in-out 0.5s;
 }
 
 /* =========================
    Helpers
    ========================= */
 
-.container{
-  width:min(var(--container), 100% - (var(--pad) * 2));
-  margin-inline:auto;
+.container {
+  width: min(var(--container), 100% - (var(--pad) * 2));
+  margin-inline: auto;
 }
 
-.sr-only{
-  position:absolute;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-  clip:rect(0,0,0,0);
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
 }
 
 /* =========================
    Header
    ========================= */
 
-.site-header{
-  background:var(--header);
-  color:white;
-  position:relative;
-  z-index:50;
+.site-header {
+  background: var(--header);
+  color: white;
+  position: relative;
+  z-index: 50;
 }
 
-.header-inner{
-  height:var(--header-height);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.header-inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.brand-logo{ height:3em; }
-
-.site-nav{
-  display:flex;
-  gap:26px;
+.brand-logo {
+  height: 3em;
 }
 
-.site-nav a{
-  color:rgba(255,255,255,.9);
-  text-decoration:none;
-  font-weight:600;
-  font-size:14px;
+.site-nav {
+  display: flex;
+  gap: 26px;
 }
 
-.nav-toggle{ display:none; }
+.site-nav a {
+  color: rgba(255, 255, 255, .9);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.nav-toggle {
+  display: none;
+}
 
 /* =========================
    HERO
    ========================= */
 
-.hero{
-  position:relative;
-  height:calc(100vh - var(--header-height));
-  overflow:hidden;
+.hero {
+  position: relative;
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
 }
 
-.hero-bg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:0;
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
-.hero-canvas{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:1;
+.hero-dot {
+  color: var(--orange);
 }
 
-.hero-inner{
-  position:relative; /* keeps credit + arrow positioned correctly */
-  z-index:2;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.hero-title{
-  margin:0;
-  max-width:860px;
-  font-size:clamp(32px, 3.5vw, 58px);
-  font-weight:800;
-  line-height:1.12;
-
-  background-image:url("../assets/img/hero.jpg");
-  background-size:cover;
-  background-position:center;
-
-  color:rgba(0,0,0,.35);
-  -webkit-background-clip:text;
-  background-clip:text;
-  mix-blend-mode:difference;
+.hero-inner {
+  position: relative;
+  /* keeps credit + arrow positioned correctly */
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-credit{
-  position:absolute;
-  right:18px;
-  bottom:18px;
-  font-size:11px;
-  color:rgba(255,255,255,.75);
-  z-index:10;
+.hero-title {
+  margin: 0;
+  max-width: 860px;
+  font-size: clamp(32px, 3.5vw, 58px);
+  font-weight: 800;
+  line-height: 1.12;
+
+  background-image: url("../assets/img/hero.jpg");
+  background-size: cover;
+  background-position: center;
+
+  color: rgba(0, 0, 0, .35);
+  -webkit-background-clip: text;
+  background-clip: text;
+  mix-blend-mode: difference;
 }
 
-.hero-scroll{
-  position:absolute;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:10;
-  line-height:0;
-  text-decoration:none;
+.hero-credit {
+  font-family: "Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, .75);
+  z-index: 10;
 }
 
-.hero-scroll svg{ display:block; }
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 10;
+  line-height: 0;
+  text-decoration: none;
+}
 
-.scroll-arrow{
-  width:64px;
-  height:auto;
-  display:block;
+.hero-scroll svg {
+  display: block;
+}
+
+.scroll-arrow {
+  width: 64px;
+  height: auto;
+  display: block;
 }
 
 /* =========================
    Projects base
    ========================= */
 
-.projects{
-  background:var(--projects-bg);
-  padding:1em 0;
+.projects {
+  background: var(--projects-bg);
+  padding: 1em 0;
 }
 
-.section-title{
-  text-align:center;
-  font-size:65px;
-  margin:40px 0;
-  color:rgba(255,101,0);
+.section-title {
+  text-align: center;
+  font-size: 65px;
+  margin: 40px 0;
+  color: rgba(255, 101, 0);
+}
+
+#projects .section-title {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
 }
 
 /* Base grid for non-SMI pages (kept simple) */
-.project-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:26px;
-  max-width:980px;
-  margin:0 auto;
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0;
 }
 
-.project-card{
-  margin:0;
-  background:white;
-  border:1px solid rgba(0,0,0,.2);
-  overflow:hidden;
+.project-card {
+  position: relative;
+  margin: 0;
+  background: var(--projects-bg);
+  overflow: hidden;
+  border-radius: 2px;
+  transition: filter 0.3s ease;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
 }
 
-.project-card img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
+.project-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  filter: brightness(70%);
+  transition: filter 0.3s ease;
+}
+
+.project-card:hover img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(30%);
+  transition: filter 0.3s ease;
+}
+.project-label {
+  position: absolute;
+  bottom: 50%;
+  width: 100%;
+  transform: translate(0, 50%);
+  text-align: center;
+  font-family: "Futura", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--projects-bg);
+  display: block;
+  font-size: 3rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 /* =========================
    Awards / Contact
    ========================= */
 
-.awards{
-  background:var(--awards-bg);
-  min-height:60vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.awards {
+  background: var(--awards-bg);
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.awards-title{
-  font-size:48px;
-  color:rgba(255,255,255,.95);
-  font-weight:900;
+.awards-title {
+  font-size: 48px;
+  color: rgba(255, 255, 255, .95);
+  font-weight: 900;
 }
 
-.contact{ padding:60px 0 90px; }
+.contact {
+  padding: 60px 0 90px;
+}
 
 /* =========================
    Responsive base
    ========================= */
 
-@media (max-width:900px){
-  .hero-inner{
-    justify-content:flex-start;
-    padding-top:90px;
+@media (max-width:900px) {
+  .hero-inner {
+    justify-content: flex-start;
+    padding-top: 90px;
   }
 
-  .hero-title{
-    font-size:clamp(30px, 6vw, 46px);
+  .hero-title {
+    font-size: clamp(30px, 6vw, 46px);
   }
 
-  .project-grid{
-    grid-template-columns:1fr;
-    max-width:520px;
+  .project-grid {
+    grid-template-columns: 1fr;
+    max-width: 520px;
   }
 }
 
@@ -246,77 +331,84 @@ body{
    3-column column-flow masonry (NO CROP) + balance
    ======================================================= */
 
-.smi .projects{
-  padding:80px 0 100px;
+.smi .projects {
+  padding: 80px 0 100px;
 }
 
 /* wider container on SMI page */
-.smi .container{
-  width:min(1700px, 100% - 24px);
+.smi .container {
+  width: min(1700px, 100% - 24px);
 }
 
 /* let sections breathe across the width */
-.smi .project-block{
-  max-width:none;
-  margin:0 auto 80px;
-  padding:0;
+.smi .project-block {
+  max-width: none;
+  margin: 0 auto 80px;
+  padding: 0;
 }
 
 /* nicer header sizing on SMI page */
-.smi .section-title{
-  font-size:clamp(28px, 3.2vw, 44px);
-  margin:20px 0 18px;
+.smi .section-title {
+  font-size: clamp(28px, 3.2vw, 44px);
+  margin: 20px 0 18px;
 }
 
 /* optional title/subtitle */
-.smi .project-title{
-  font-size:clamp(26px, 3vw, 42px);
-  margin:0;
-}
-.smi .project-subtitle{
-  margin:6px 0 0;
-  max-width:70ch;
-  opacity:0.8;
+.smi .project-title {
+  font-size: clamp(26px, 3vw, 42px);
+  margin: 0;
 }
 
-/* ✅ FORCE column-flow masonry and prevent "huge first items" */
-.smi .project-grid{
-  display:block;           /* overrides the base grid */
-  column-count:3;
-  column-gap:22px;
-  column-fill:balance;     /* Fix 2 */
-  max-width:none;
-  margin:0;               /* no centering */
+.smi .project-subtitle {
+  margin: 6px 0 0;
+  max-width: 70ch;
+  opacity: 0.8;
+}
+
+/* masonry grid using CSS columns */
+.smi .project-grid {
+  display: block;
+  /* overrides the base grid */
+  column-count: 3;
+  column-gap: 22px;
+  column-fill: balance;
+  /* Fix 2 */
+  max-width: none;
+  margin: 0;
 }
 
 /* each card behaves properly inside columns */
-.smi .project-card{
-  display:inline-block;    /* important for consistent column sizing */
-  width:100%;
-  break-inside:avoid;
-  margin:0 0 22px 0;
+.smi .project-card {
+  display: inline-block;
+  /* important for consistent column sizing */
+  width: 100%;
+  break-inside: avoid;
+  margin: 0 0 22px 0;
 
   /* remove the base "card" look for SMI (optional but matches your screenshots) */
-  background:none;
-  border:none;
-  overflow:visible;
+  background: none;
+  border: none;
+  overflow: visible;
 }
 
 /* never crop */
-.smi .project-card img{
-  width:100%;
-  height:auto;
-  display:block;
-  object-fit:initial;
-  border-radius:18px;
+.smi .project-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: initial;
+  border-radius: 18px;
 }
 
 /* responsive: 3 → 2 → 1 */
-@media (max-width:1200px){
-  .smi .project-grid{ column-count:2; }
+@media (max-width:1200px) {
+  .smi .project-grid {
+    column-count: 2;
+  }
 }
 
-@media (max-width:700px){
-  .smi .project-grid{ column-count:1; }
+@media (max-width:700px) {
+  .smi .project-grid {
+    column-count: 1;
+  }
 }
-
