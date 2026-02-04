@@ -25,7 +25,14 @@
       </button>
 
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="#projects">Projects</a>
+        <div class="nav-item has-dropdown">
+          <a href="#projects">Portfolio</a>
+          <div class="dropdown" aria-label="Portfolio links">
+            <a href="../Video/index.html">Films</a>
+            <a href="../Photos/index.html">Photo</a>
+            <a href="../XR/underconstruction.html">XR</a>
+          </div>
+        </div>
         <a href="../about/about.html">About</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -86,7 +93,30 @@
     <section id="contact" class="contact" aria-label="Contact">
       <div class="container">
         <h2>Contact</h2>
-        <p>Add your contact info or form here.</p>
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:Daviddwnoh@gmail.com" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
+              <path d="M3 6h18v12H3z" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
+            <span>Daviddwnoh@gmail.com</span>
+          </a>
+          <a class="contact-link" href="https://instagram.com/davidnfilms" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="4" />
+              <circle cx="12" cy="12" r="3.5" />
+              <circle cx="17" cy="7" r="1" />
+            </svg>
+            <span>@davidnfilms</span>
+          </a>
+          <a class="contact-link" href="https://www.youtube.com/@Davidnfilms25" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
+              <rect x="3.5" y="7" width="17" height="10" rx="2" />
+              <path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" />
+            </svg>
+            <span>youtube.com/@Davidnfilms25</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
