@@ -619,7 +619,7 @@ body.smi #projects .section-title {
   height: auto;
   display: block;
   object-fit: initial;
-  border-radius: 18px;
+  border-radius: 2px;
   filter: none;
   transition: filter 0.3s ease;
 }
