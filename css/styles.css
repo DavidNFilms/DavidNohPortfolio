@@ -632,6 +632,32 @@ body.smi #projects .section-title {
   filter: brightness(70%);
 }
 
+.smi .project-grid.kuleshov-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  max-width: none;
+  margin: 0;
+}
+
+.smi .project-card.kuleshov-slot {
+  display: block;
+  margin: 0;
+}
+
+.smi .kuleshov-frame {
+  min-height: 220px;
+  border: 1px dashed rgba(238, 237, 233, 0.6);
+  border-radius: 2px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 16px;
+  color: rgba(238, 237, 233, 0.9);
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -660,10 +686,18 @@ body.smi #projects .section-title {
   .smi .project-grid {
     column-count: 2;
   }
+
+  .smi .project-grid.kuleshov-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width:700px) {
   .smi .project-grid {
     column-count: 1;
+  }
+
+  .smi .project-grid.kuleshov-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
