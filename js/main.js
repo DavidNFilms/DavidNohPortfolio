@@ -6,6 +6,35 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("is-fading");
   });
 
+  // Mobile nav toggle
+  const navToggle = document.querySelector(".nav-toggle");
+  const siteNav = document.querySelector(".site-nav");
+  if (navToggle && siteNav) {
+    navToggle.addEventListener("click", () => {
+      const isOpen = siteNav.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", String(isOpen));
+      document.body.style.overflow = isOpen ? "hidden" : "";
+    });
+
+    // Close nav when any link is tapped
+    siteNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        siteNav.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      });
+    });
+
+    // Close on resize back to desktop
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768) {
+        siteNav.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+    });
+  }
+
   // Smooth page fade-out on internal navigation
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a");
@@ -50,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cards.forEach((card) => {
     card.style.opacity = "0";
-    card.style.transition = "opacity 800ms ease";
+    card.style.transition = "opacity 800ms ease, transform 0.28s ease, box-shadow 0.28s ease";
   });
 
   function reveal() {

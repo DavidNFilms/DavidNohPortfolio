@@ -5,12 +5,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>David Noh</title>
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/Favicon_v3.png">
   <link rel="icon" href="assets/favicon/Favicon_v3.png">
-
-  <!-- Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 
@@ -43,40 +42,38 @@
   <main>
     <!-- HERO -->
     <section class="hero" aria-label="Hero">
-
       <img class="hero-bg" src="assets/img/hero.jpg" alt="" />
-
-      <div id="hero-canvas" class="hero-canvas" aria-hidden="true"></div>
+      <div class="hero-blob hero-blob-1" aria-hidden="true"></div>
+      <div class="hero-blob hero-blob-2" aria-hidden="true"></div>
 
       <div class="container hero-inner">
-        <h1 class="hero-title">
-          Blending Design, Technology,<br />
-          and Storytelling to build<br />
-          Immersive Experiences<span class="hero-dot">.</span>
-        </h1>
+        <div class="hero-content">
+          <p class="hero-eyebrow">David Noh &mdash; Portfolio</p>
+          <h1 class="hero-title">
+            Blending Design,<br />
+            Technology,<br />
+            and Storytelling<span class="hero-dot">.</span>
+          </h1>
+          <p class="hero-tagline">Filmmaker &middot; Photographer &middot; XR Designer</p>
+        </div>
 
         <div class="hero-credit">
           <div class="hero-credit-title">Grand Canyon</div>
           <div class="hero-credit-sub">David Noh 2025</div>
         </div>
 
-        <!--SVG Scroll Arrow -->
         <a class="hero-scroll" href="#projects" aria-label="Scroll to projects">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.722 35.486" class="scroll-arrow" aria-hidden="true">
-            <g opacity="0.487">
-              <path
-                d="M0,25.483a10,10,0,0,1-9.18-6.024,10,10,0,0,1,5.2-13.153l35.7-15.481a10,10,0,0,1,13.153,5.2,10,10,0,0,1-5.2,13.153L3.978,24.655A9.967,9.967,0,0,1,0,25.483Z"
-                transform="translate(46.019 10.003)" fill="#eeede9" />
-              <path
-                d="M36.012,25.483a9.967,9.967,0,0,1-3.944-.815L-3.949,9.187A10,10,0,0,1-9.187-3.949,10,10,0,0,1,3.949-9.187L39.965,6.293a10,10,0,0,1-3.954,19.19Z"
-                transform="translate(10.003 10.003)" fill="#eeede9" />
+            <g opacity="0.6">
+              <path d="M0,25.483a10,10,0,0,1-9.18-6.024,10,10,0,0,1,5.2-13.153l35.7-15.481a10,10,0,0,1,13.153,5.2,10,10,0,0,1-5.2,13.153L3.978,24.655A9.967,9.967,0,0,1,0,25.483Z" transform="translate(46.019 10.003)" fill="white"/>
+              <path d="M36.012,25.483a9.967,9.967,0,0,1-3.944-.815L-3.949,9.187A10,10,0,0,1-9.187-3.949,10,10,0,0,1,3.949-9.187L39.965,6.293a10,10,0,0,1-3.954,19.19Z" transform="translate(10.003 10.003)" fill="white"/>
             </g>
           </svg>
         </a>
       </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- PORTFOLIO GRID -->
     <section id="projects" class="projects" aria-label="Projects">
       <div class="container">
         <h2 class="section-title">Portfolio</h2>
@@ -84,17 +81,20 @@
         <div class="project-grid">
           <a class="project-card" href="Video/index.html">
             <img src="assets/img/Project-grid/film.jpg" alt="Video projects" />
-            <span class="project-label faint">Films</span>
+            <span class="project-num">01</span>
+            <span class="project-label">Films</span>
           </a>
 
-          <a class="project-card photo" href="Photos/index.html">
+          <a class="project-card" href="Photos/index.html">
             <img src="assets/img/Project-grid/photo.png" alt="Photo projects" />
-            <span class="project-label strong">Photo</span>
+            <span class="project-num">02</span>
+            <span class="project-label">Photo</span>
           </a>
-          
+
           <a class="project-card" href="XR/underconstruction.html">
-            <img src="assets/img/Project-grid/photo.png" alt="Photo projects" />
-            <span class="project-label faint">XR</span>
+            <img src="assets/img/Project-grid/photo.png" alt="XR projects" />
+            <span class="project-num">03</span>
+            <span class="project-label">XR</span>
           </a>
         </div>
       </div>
@@ -103,29 +103,27 @@
     <!-- AWARDS -->
     <section class="awards" aria-label="Awards">
       <div class="container awards-inner">
-        <h2 class="awards-title">Awards</h2>
+        <h2 class="awards-title">Recognition</h2>
         <div class="awards-marquee" aria-label="Awards carousel">
-          <div class="awards-track">
-            <div class="award-item">
-              <img src="assets/img/Awards-Logos/NHD_Edited.png" alt="NHD Award Logo" />
-            </div>
-            <div class="award-item">
-              <img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Award Logo" />
-            </div>
-            <div class="award-item">Award 3</div>
-            <div class="award-item">Award 4</div>
-            <div class="award-item">Award 5</div>
-            <div class="award-item">Award 6</div>
-            <div class="award-item">
-              <img src="assets/img/Awards-Logos/NHD_Edited.png" alt="NHD Award Logo" />
-            </div>
-            <div class="award-item">
-              <img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Award Logo" />
-            </div>
-            <div class="award-item">Award 3</div>
-            <div class="award-item">Award 4</div>
-            <div class="award-item">Award 5</div>
-            <div class="award-item">Award 6</div>
+          <!-- Track is doubled (first half + exact copy) for seamless infinite loop -->
+          <div class="awards-track" aria-hidden="true">
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <!-- Duplicate half — required for seamless loop -->
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>
+            <div class="award-item"><img src="assets/img/Awards-Logos/Scholastic_logo_edited.png" alt="Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys" /></div>
           </div>
         </div>
       </div>
@@ -138,23 +136,19 @@
         <div class="contact-links">
           <a class="contact-link" href="mailto:Daviddwnoh@gmail.com" aria-label="Email">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <path d="M3 6h18v12H3z" />
-              <path d="m3 7 9 6 9-6" />
+              <path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" />
             </svg>
             <span>Daviddwnoh@gmail.com</span>
           </a>
           <a class="contact-link" href="https://instagram.com/davidnfilms" aria-label="Instagram" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="4" y="4" width="16" height="16" rx="4" />
-              <circle cx="12" cy="12" r="3.5" />
-              <circle cx="17" cy="7" r="1" />
+              <rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" />
             </svg>
             <span>@davidnfilms</span>
           </a>
           <a class="contact-link" href="https://www.youtube.com/@Davidnfilms25" aria-label="YouTube" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="3.5" y="7" width="17" height="10" rx="2" />
-              <path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" />
+              <rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" />
             </svg>
             <span>youtube.com/@Davidnfilms25</span>
           </a>
@@ -163,11 +157,6 @@
     </section>
   </main>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/sketch-hero.js"></script>
 </body>
-
-<script src="js/main.js"></script>
 </html>
