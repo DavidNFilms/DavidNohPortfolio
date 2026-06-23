@@ -44,10 +44,11 @@
   --bg-border:   #1f1f1f;
   --bg-border-hi: rgba(255, 255, 255, 0.13);
 
-  /* Text */
+  /* Text — muted hits ~5.4:1 on --bg / --bg-raised so nav, labels and
+     metadata clear WCAG AA (4.5:1) for small text. Keep dim for decoration only. */
   --text:        #EDECE8;
-  --text-muted:  rgba(237, 236, 232, 0.42);
-  --text-dim:    rgba(237, 236, 232, 0.22);
+  --text-muted:  rgba(237, 236, 232, 0.56);
+  --text-dim:    rgba(237, 236, 232, 0.34);
 
   /* Accent */
   --accent:      #A8281F;
@@ -113,14 +114,18 @@ html, body {
 body {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
   color: var(--text);
-  opacity: 0;
   transition: opacity 0.45s ease;
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
 
-body.is-loaded { opacity: 1; }
-body.is-fading { opacity: 0; }
+/* The page-fade is progressive enhancement: hide the body up front ONLY when
+   JS is present (html.js is set by an inline head script before first paint).
+   Without JS — or if a script errors — the body stays fully visible, so content
+   never depends on JavaScript to appear. */
+html.js body          { opacity: 0; }
+html.js body.is-loaded { opacity: 1; }
+html.js body.is-fading { opacity: 0; }
 
 main > section { min-height: calc(70vh - var(--header-height)); }
 main > section.contact,
@@ -143,6 +148,13 @@ main > section.awards { min-height: auto; }
   clip: rect(0, 0, 0, 0);
 }
 
+/* Visible keyboard focus — accent ring on the dark ground. Mouse interaction
+   stays clean because :focus-visible only fires for keyboard / programmatic focus. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* =========================
    Navigation
    ========================= */
@@ -151,7 +163,7 @@ main > section.awards { min-height: auto; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #262626;
+  background: #101010;
   border-bottom: 1px solid var(--bg-border);
 }
 
@@ -796,28 +808,154 @@ main > section.projects { min-height: auto; }
 
 .about-page { min-height: 100vh; }
 
+.about-eyebrow {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 24px;
+}
+
 .about-hero {
-  padding: 80px 0;
+  padding: clamp(72px, 11vh, 140px) 0 clamp(56px, 8vh, 96px);
   border-bottom: 1px solid var(--bg-border);
 }
 
 .about-hero h1 {
-  font-size: clamp(44px, 7vw, 96px);
-  font-weight: 800;
+  font-family: "Futura", system-ui, sans-serif;
+  font-size: clamp(44px, 7vw, 104px);
+  font-weight: 700;
   letter-spacing: -0.025em;
-  line-height: 0.95;
+  line-height: 0.92;
   margin: 0 0 var(--sp-4);
   color: var(--text);
 }
 
 .about-hero h1 span { color: var(--accent); }
 
-.about-hero .muted {
-  color: var(--text-muted);
-  font-size: 15px;
+.about-lead {
+  color: var(--text);
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.5;
   margin: 0;
-  max-width: 52ch;
-  line-height: 1.72;
+  max-width: 30ch;
+  opacity: 0.86;
+}
+
+/* ── Bio narrative ──────────────────────────────────────── */
+.about-bio {
+  padding: clamp(56px, 8vh, 104px) 0;
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.about-bio .container {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 80px);
+}
+
+.about-section-label {
+  font-family: "Futura", system-ui, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 6px 0 0;
+}
+
+.about-prose {
+  max-width: 64ch;
+}
+
+.about-prose p {
+  color: rgba(237, 236, 232, 0.82);
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.78;
+  margin: 0 0 1.3em;
+}
+
+.about-prose p:last-child { margin-bottom: 0; }
+.about-prose strong { color: var(--text); font-weight: 600; }
+
+/* ── Stats ──────────────────────────────────────────────── */
+.about-stats {
+  padding: clamp(48px, 7vh, 88px) 0;
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.about-stats .container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 4vw, 56px);
+}
+
+.about-stat .num {
+  font-family: "Futura", system-ui, sans-serif;
+  font-size: clamp(34px, 5vw, 60px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.about-stat .num span { color: var(--accent); }
+
+.about-stat .label {
+  margin: 14px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* ── Focus / education detail rows ──────────────────────── */
+.about-detail {
+  padding: clamp(56px, 8vh, 104px) 0;
+}
+
+.about-detail + .about-detail {
+  padding-top: 0;
+}
+
+.about-detail .container {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 80px);
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-tag {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: rgba(237, 236, 232, 0.82);
+  border: 1px solid var(--bg-border-hi);
+  padding: 9px 16px;
+}
+
+.about-edu .school {
+  font-family: "Futura", system-ui, sans-serif;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+}
+.about-edu .degree {
+  margin: 10px 0 0;
+  font-size: clamp(15px, 1.5vw, 17px);
+  color: rgba(237, 236, 232, 0.82);
+  line-height: 1.6;
+}
+.about-edu .minor {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
 /* =========================
@@ -907,6 +1045,53 @@ main > section.projects { min-height: auto; }
 }
 
 /* =========================
+   Enlarged desktop view — the "175% zoom" default
+   Reproduces how the site looks at 175% browser zoom (preferred on a 4K
+   display): the comfortable ~1320 container layout, enlarged 1.75×. Phones and
+   small tablets (< 1200px) are excluded so nothing overflows. The token resets
+   hold the 1440-tier chrome so the zoom enlarges that layout instead of
+   compounding with the ultra-wide 1920/2560 container tokens.
+   Knobs: change `zoom` (1.75) to scale more/less, the 1200px threshold to set
+   where it kicks in, or set `zoom: 1` here to revert entirely.
+   ========================= */
+@media (min-width: 1200px) {
+  :root {
+    zoom: 1.75;
+    --container: 1320px;
+    --header-height: 76px;
+    --brand-logo-height: 46px;
+    --nav-gap: 44px;
+    --nav-font-size: 12px;
+    --nav-dropdown-font-size: 11px;
+  }
+
+  /* CSS `zoom` does NOT shrink viewport units (svh / vw) the way real browser
+     zoom does, so anything sized in svh/vw renders 1.75× too large and breaks
+     layout (the hero is the obvious one). Divide those units back by the zoom
+     factor so they fill one *visual* screen. Keep these divisors in sync with
+     the zoom value above if you change it. */
+  .hero {
+    height: clamp(360px, calc(100svh / 1.75 - var(--header-height)), 1080px);
+    /* `main > section` sets min-height: calc(70vh - …); that 70vh isn't divided
+       under zoom, so it forces the hero ~1.75× too tall and opens dead space.
+       Let the height rule above own it. */
+    min-height: 0;
+  }
+
+  .home .hero-title { font-size: clamp(44px, calc(6.5vw / 1.75), 104px); }
+  .hero-title       { font-size: clamp(48px, calc(7.5vw / 1.75), 104px); }
+  .contact h2       { font-size: clamp(36px, calc(5.5vw / 1.75), 72px); }
+  .about-hero h1    { font-size: clamp(44px, calc(7vw / 1.75), 104px); }
+
+  /* Full-bleed marquee: keep it one effective-screen wide so it doesn't force
+     a horizontal scrollbar under zoom. */
+  .awards-marquee {
+    width: calc(100vw / 1.75);
+    margin-left: calc(50% - (50vw / 1.75));
+  }
+}
+
+/* =========================
    Tablet (≤ 900px)
    ========================= */
 
@@ -950,6 +1135,9 @@ main > section.projects { min-height: auto; }
     flex-direction: column;
     gap: 20px;
   }
+
+  /* 44px touch target once links stack */
+  .contact-link { min-height: 44px; }
 }
 
 /* Shorter laptops (covers common 1366×768 / 1440×900 panels) */
@@ -1002,7 +1190,7 @@ main > section.projects { min-height: auto; }
     display: none;
     position: fixed;
     inset: var(--header-height) 0 0 0;
-    background: #262626;
+    background: #101010;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -1045,7 +1233,7 @@ main > section.projects { min-height: auto; }
   .site-nav .dropdown a {
     font-size: 11px;
     letter-spacing: 0.16em;
-    padding: 0;
+    padding: 12px 16px;
     color: var(--text-muted);
   }
 
@@ -1088,6 +1276,17 @@ main > section.projects { min-height: auto; }
   /* About page heading smaller */
   .about-hero h1 {
     font-size: clamp(36px, 10vw, 64px);
+  }
+
+  /* About page: stack the two-column rows on phones */
+  .about-bio .container,
+  .about-detail .container {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .about-stats .container {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 
   .smi .projects .container {
@@ -1274,6 +1473,27 @@ body.smi #projects .section-title {
   height: auto;
   border-radius: 0;
 }
+
+/* Close affordance — 44px hit area for touch + keyboard */
+.lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+  transition: background var(--ease);
+}
+
+.lightbox-close:hover { background: rgba(0, 0, 0, 0.75); }
 
 /* Responsive SMI: 3 → 2 → 1 columns */
 @media (max-width: 1200px) {

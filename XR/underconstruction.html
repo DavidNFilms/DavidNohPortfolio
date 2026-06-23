@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>David Noh</title>
 
   <!-- Favicon -->
@@ -46,23 +47,25 @@
     <!-- HERO -->
     <section class="hero" aria-label="Hero">
 
-      <img class="hero-bg" src="../assets/img/hero.jpg" alt="" />
+      <img class="hero-bg" src="../assets/img/hero.jpg" alt="" fetchpriority="high" decoding="async" />
 
       <div id="hero-canvas" class="hero-canvas" aria-hidden="true"></div>
 
       <div class="container hero-inner">
-        <h1 class="hero-title">
-          Section Under Construction<span class="hero-dot">!</span>
-        </h1>
+        <div class="hero-content">
+          <p class="hero-eyebrow">David Noh &mdash; XR</p>
+          <h1 class="hero-title">
+            Section Under Construction<span class="hero-dot">!</span>
+          </h1>
+        </div>
 
         <div class="hero-credit">
           <div class="hero-credit-title">Grand Canyon</div>
           <div class="hero-credit-sub">David Noh 2025</div>
         </div>
-
-        </a>
       </div>
     </section>
-<script src="../js/main.js"></script>
+  </main>
+  <script src="../js/main.js"></script>
 </body>
 </html>

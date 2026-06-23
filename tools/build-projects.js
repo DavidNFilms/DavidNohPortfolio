@@ -192,7 +192,7 @@ function mdInline(s) {
 function heroSection(p, eyebrow) {
   return `
     <section class="project-hero">
-      ${p.cover ? `<img class="project-cover" src="${imgSrc(p.cover)}" alt="${esc(p.title)}" />` : ''}
+      ${p.cover ? `<img class="project-cover" src="${imgSrc(p.cover, 'w1600')}" alt="${esc(p.title)}" fetchpriority="high" decoding="async" />` : ''}
       <div class="project-hero-inner project-wrap">
         <p class="project-eyebrow">${esc(eyebrow)}</p>
         <h1 class="project-title">${esc(p.title)}</h1>
@@ -212,6 +212,7 @@ function renderPage(p) {
   ${GEN_MARK}
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>${esc(p.title)} — David Noh</title>
   <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
   <link rel="icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
@@ -264,7 +265,7 @@ function renderPage(p) {
       </div>
     </section>` : ''}${p.subphoto ? `
     <section class="project-feature">
-      <div class="project-wrap"><img src="${imgSrc(p.subphoto)}" alt="${esc(p.title)}" loading="lazy" /></div>
+      <div class="project-wrap"><img src="${imgSrc(p.subphoto, 'w1600')}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></div>
     </section>` : ''}`;
   }
 
@@ -272,7 +273,7 @@ function renderPage(p) {
     <section class="project-gallery">
       <div class="project-wrap">
         ${p.gallery.map(g =>
-          `<figure class="project-shot"><img src="${imgSrc(g)}" alt="${esc(p.title)}" loading="lazy" /></figure>`
+          `<figure class="project-shot"><img src="${imgSrc(g, 'w1200')}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></figure>`
         ).join('\n        ')}
       </div>
     </section>` : '';
@@ -372,7 +373,7 @@ function injectCards(section, items) {
 
   const cards = items.map((p, i) => {
     const num = String(offset + i + 1).padStart(2, '0');
-    const img = p.cover ? `\n            <img src="${imgSrc(p.cover)}" alt="${esc(p.title)}" />` : '';
+    const img = p.cover ? `\n            <img src="${imgSrc(p.cover, 'w1200')}" alt="${esc(p.title)}" loading="lazy" decoding="async" />` : '';
     return `          <a class="project-card" href="../projects/${p.slug}.html">${img}
             <span class="project-num">${num}</span>
             <span class="project-label">${esc(p.title)}</span>
@@ -412,7 +413,9 @@ function esc(s) {
 function rel(p) {
   if (!p) return '';
   if (/^https?:\/\//i.test(p)) return p;
-  return '../' + String(p).replace(/^\.?\/+/, '');
+  // normalize Windows-style backslashes — they aren't valid URL separators and
+  // break on case-sensitive / strict hosts (e.g. GitHub Pages)
+  return '../' + String(p).replace(/\\/g, '/').replace(/^\.?\/+/, '');
 }
 
 // pull the file id out of any Google Drive share/open/uc link
@@ -425,10 +428,10 @@ function driveId(url) {
 // resolve an image field to a usable <img src>: Google Drive links become a
 // direct thumbnail URL, local paths get the ../ prefix, other URLs pass through.
 // (The Drive file's sharing must be "Anyone with the link" to display.)
-function imgSrc(p) {
+function imgSrc(p, size = 'w1600') {
   if (!p) return '';
   const id = driveId(p);
-  if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w2000`;
+  if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=${size}`;
   return rel(p);
 }
 // Returns { provider, html }. Works for normal AND unlisted YouTube links

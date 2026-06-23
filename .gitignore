@@ -1,0 +1,14 @@
+# Local impeccable tool config (live mode)
+.impeccable/
+
+# Large local video sources — exceed GitHub's 100MB file limit and aren't served
+# by GitHub Pages. Host on YouTube/Drive/Vimeo and reference via the video: link.
+*.mov
+
+# Held video-project drafts — re-enable by removing the leading underscore and
+# setting a hosted video: URL, then re-running `node tools/build-projects.js`.
+content/projects/_purity.md
+content/projects/_senior-signout.md
+
+# OS cruft
+.DS_Store

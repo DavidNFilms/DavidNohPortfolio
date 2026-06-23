@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>David Noh</title>
   <link rel="icon" type="image/png" href="assets/favicon/Logo%20v2%20Black%20Bkg.png">
   <link rel="icon" href="assets/favicon/Logo%20v2%20Black%20Bkg.png">
@@ -42,7 +43,7 @@
   <main>
     <!-- HERO -->
     <section class="hero" aria-label="Hero">
-      <img class="hero-bg" src="assets/img/hero.jpg" alt="" />
+      <img class="hero-bg" src="assets/img/hero.jpg" alt="" fetchpriority="high" decoding="async" />
       <div class="hero-blob hero-blob-1" aria-hidden="true"></div>
       <div class="hero-blob hero-blob-2" aria-hidden="true"></div>
 
@@ -80,19 +81,19 @@
 
         <div class="project-grid">
           <a class="project-card" href="Video/index.html">
-            <img src="assets/img/Project-grid/film.jpg" alt="Video projects" />
+            <img src="assets/img/Project-grid/film.jpg" alt="Video projects" loading="lazy" decoding="async" />
             <span class="project-num">01</span>
             <span class="project-label">Films</span>
           </a>
 
           <a class="project-card" href="Photos/index.html">
-            <img src="assets/img/Project-grid/photo.png" alt="Photo projects" />
+            <img src="assets/img/Project-grid/photo.png" alt="Photo projects" loading="lazy" decoding="async" />
             <span class="project-num">02</span>
             <span class="project-label">Photo</span>
           </a>
 
           <a class="project-card" href="XR/underconstruction.html">
-            <img src="assets/img/Project-grid/photo.png" alt="XR projects" />
+            <img src="assets/img/Project-grid/photo.png" alt="XR projects" loading="lazy" decoding="async" />
             <span class="project-num">03</span>
             <span class="project-label">XR</span>
           </a>
@@ -104,7 +105,15 @@
     <section class="awards" aria-label="Awards">
       <div class="container awards-inner">
         <h2 class="awards-title">Recognition</h2>
-        <div class="awards-marquee" aria-label="Awards carousel">
+
+        <!-- Accessible list of the awards — the animated marquee below is purely
+             visual and hidden from assistive tech. -->
+        <ul class="sr-only">
+          <li>National History Day — Two-Time National Top 20</li>
+          <li>Scholastic Art &amp; Writing Awards — Gold &amp; Silver Keys</li>
+        </ul>
+
+        <div class="awards-marquee" aria-hidden="true">
           <!-- Track is doubled (first half + exact copy) for seamless infinite loop -->
           <div class="awards-track" aria-hidden="true">
             <div class="award-item"><img src="assets/img/Awards-Logos/NHD_Edited.png" alt="National History Day — Two-Time National Top 20" /></div>

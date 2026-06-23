@@ -108,7 +108,7 @@ body.project {
 }
 
 .project-text p { margin: 0 0 1.2em; }
-.project-text a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(255,101,0,0.4); }
+.project-text a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
 .project-text h2, .project-text h3, .project-text h4 {
   font-family: "Futura", system-ui, sans-serif;
   color: #fff;
@@ -212,8 +212,16 @@ body.project {
 
 /* ── Responsive ─────────────────────────────────────────── */
 
+/* Enlarged desktop ("175% zoom") — divide the 78vh / 6vw viewport units back by
+   the zoom factor so the cover hero and title don't render oversized. Mirrors
+   the compensation in styles.css; keep the divisor in sync with the zoom value. */
+@media (min-width: 1200px) {
+  .project-hero { min-height: clamp(360px, calc(78vh / 1.75), 820px); }
+  .project-title { font-size: clamp(40px, calc(6vw / 1.75), 88px); }
+}
+
 @media (max-width: 768px) {
-  .project-wrap { width: 100% - 40px; width: calc(100% - 40px); }
+  .project-wrap { width: calc(100% - 40px); }
   .project-hero { min-height: 70vh; }
   .project-hero-inner { padding-bottom: 40px; }
   .project-intro { padding-top: 48px; }
