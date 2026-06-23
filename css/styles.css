@@ -1045,53 +1045,6 @@ main > section.projects { min-height: auto; }
 }
 
 /* =========================
-   Enlarged desktop view — the "175% zoom" default
-   Reproduces how the site looks at 175% browser zoom (preferred on a 4K
-   display): the comfortable ~1320 container layout, enlarged 1.75×. Phones and
-   small tablets (< 1200px) are excluded so nothing overflows. The token resets
-   hold the 1440-tier chrome so the zoom enlarges that layout instead of
-   compounding with the ultra-wide 1920/2560 container tokens.
-   Knobs: change `zoom` (1.75) to scale more/less, the 1200px threshold to set
-   where it kicks in, or set `zoom: 1` here to revert entirely.
-   ========================= */
-@media (min-width: 1200px) {
-  :root {
-    zoom: 1.75;
-    --container: 1320px;
-    --header-height: 76px;
-    --brand-logo-height: 46px;
-    --nav-gap: 44px;
-    --nav-font-size: 12px;
-    --nav-dropdown-font-size: 11px;
-  }
-
-  /* CSS `zoom` does NOT shrink viewport units (svh / vw) the way real browser
-     zoom does, so anything sized in svh/vw renders 1.75× too large and breaks
-     layout (the hero is the obvious one). Divide those units back by the zoom
-     factor so they fill one *visual* screen. Keep these divisors in sync with
-     the zoom value above if you change it. */
-  .hero {
-    height: clamp(360px, calc(100svh / 1.75 - var(--header-height)), 1080px);
-    /* `main > section` sets min-height: calc(70vh - …); that 70vh isn't divided
-       under zoom, so it forces the hero ~1.75× too tall and opens dead space.
-       Let the height rule above own it. */
-    min-height: 0;
-  }
-
-  .home .hero-title { font-size: clamp(44px, calc(6.5vw / 1.75), 104px); }
-  .hero-title       { font-size: clamp(48px, calc(7.5vw / 1.75), 104px); }
-  .contact h2       { font-size: clamp(36px, calc(5.5vw / 1.75), 72px); }
-  .about-hero h1    { font-size: clamp(44px, calc(7vw / 1.75), 104px); }
-
-  /* Full-bleed marquee: keep it one effective-screen wide so it doesn't force
-     a horizontal scrollbar under zoom. */
-  .awards-marquee {
-    width: calc(100vw / 1.75);
-    margin-left: calc(50% - (50vw / 1.75));
-  }
-}
-
-/* =========================
    Tablet (≤ 900px)
    ========================= */
 
