@@ -88,9 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (y > 200) projectsTitle.style.opacity = "1";
 
     if (y > 350 && cards.length) {
-      cards[0] && (cards[0].style.opacity = "1");
-      setTimeout(() => cards[1] && (cards[1].style.opacity = "1"), 250);
-      setTimeout(() => cards[2] && (cards[2].style.opacity = "1"), 500);
+      // reveal all cards with a small stagger rather than only the first three
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.style.opacity = "1";
+        }, i * 150);
+      });
     }
   }
 
