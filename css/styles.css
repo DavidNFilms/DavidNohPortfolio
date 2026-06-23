@@ -1038,6 +1038,15 @@ main > section.projects { min-height: auto; }
 
   .hero-eyebrow { margin: 0 0 14px; }
 
+  /* Swiss hairline hugs the text tighter on small screens */
+  .hero-content {
+    margin-left: 0;
+    padding-left: 14px;
+  }
+
+  /* Credit badge would collide with the big title on phones */
+  .hero-credit { display: none; }
+
   /* Awards section — smaller tiles on mobile */
   .award-item {
     min-width: 140px;
@@ -1078,6 +1087,23 @@ main > section.projects { min-height: auto; }
   .smi .project-grid.kuleshov-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* =========================
+   Short / landscape phones (≤ 900px wide, ≤ 600px tall)
+   Stop the hero forcing a 520px min and overflowing
+   ========================= */
+
+@media (max-width: 900px) and (max-height: 600px) {
+  .hero {
+    height: clamp(380px, calc(100svh - var(--header-height)), 600px);
+  }
+
+  .hero-inner { padding-bottom: 48px; }
+
+  .home .hero-title { font-size: clamp(36px, 9vw, 56px); }
+
+  .hero-scroll { display: none; }
 }
 
 /* =======================================================
