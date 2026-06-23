@@ -1,11 +1,12 @@
 ---
 # The file name (purity.md) becomes the page URL: projects/purity.html
 
-title:        Purity
+title:        Purity Seminar
 subtitle:     
 section:      films          # photos | films | xr
-date:                        # YYYY-MM-DD — newest list first (fill in to order it)
+date:         2026-02-20              # YYYY-MM-DD — newest list first (fill in to order it)
 
+cover: assets\img\Photo Dump\P1232089.jpg
 # Hosted on Google Drive (sharing must be "Anyone with the link").
 video:        https://drive.google.com/file/d/1pvgm2VnlVVWnj4f4jBEv7ELMpoi6gcEt/view?usp=sharing
 ---

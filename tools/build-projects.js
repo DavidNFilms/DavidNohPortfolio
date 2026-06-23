@@ -64,7 +64,17 @@ function main() {
   }
 
   const projects = files.map(f => parseProject(path.join(SRC, f)));
-  projects.sort((a, b) => (b.date || '').localeCompare(a.date || '')); // newest first
+  // Ordering: an explicit `order` wins — higher floats to the top (pin),
+  // negative sinks to the bottom (force last); blank counts as 0. Projects with
+  // the same order fall back to newest date first, then title.
+  projects.sort((a, b) => {
+    const ao = Number(a.order) || 0;
+    const bo = Number(b.order) || 0;
+    if (ao !== bo) return bo - ao;
+    const byDate = (b.date || '').localeCompare(a.date || '');
+    if (byDate) return byDate;
+    return (a.title || '').localeCompare(b.title || '');
+  });
 
   // 3. write a page per project
   for (const p of projects) {
@@ -103,6 +113,7 @@ function parseProject(file) {
     title:    data.title || 'Untitled',
     subtitle: data.subtitle || '',
     date:     data.date || '',
+    order:    data.order || '',
     cover:    data.cover || '',
     subphoto: data.subphoto || '',
     gallery:  Array.isArray(data.gallery) ? data.gallery : [],

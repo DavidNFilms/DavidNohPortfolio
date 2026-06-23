@@ -21,6 +21,7 @@ into styled pages by one command. No web knowledge required.
    | `subtitle` | One-line description under the title                              |
    | `section`  | Which portfolio it belongs to: `photos`, `films`, or `xr`        |
    | `date`     | `YYYY-MM-DD` — newer projects are listed first                    |
+   | `order`    | *(optional)* pin/force order — higher floats to the top, negative sinks to the bottom, blank = by date |
    | `cover`    | Main photo (also the thumbnail on the section page)              |
    | `subphoto` | *(optional)* a featured image shown large under the description  |
    | `gallery`  | *(optional)* a list of extra photos                              |
@@ -82,6 +83,21 @@ gallery:
 
 Set the Drive file's sharing to **"Anyone with the link"**, and the builder
 converts it into a direct image URL automatically.
+
+## Ordering & pinning
+
+By default projects are listed **newest first** (by `date`). To override that,
+set the optional `order` field:
+
+- `order: 10` — **pin to the top.** Higher numbers float higher, so `order: 20`
+  sits above `order: 10`.
+- `order: -10` — **force to the bottom.** Any negative number sinks below the
+  normal date-sorted projects.
+- *(blank)* — normal behavior: sorted by `date`, newest first.
+
+Projects with the same `order` fall back to date (newest first). The order also
+drives the `01 / 02 / 03` numbers on the section pages, so pinning a project
+moves both its position and its number. Re-run the builder after changing it.
 
 ## Removing a project
 

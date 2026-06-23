@@ -4,23 +4,19 @@
 #   grand-canyon-dawn.md  ->  projects/grand-canyon-dawn.html
 # Files starting with "_" (like this one) are ignored by the builder.
 
-title:        Project Title Here
-subtitle:     One-line description that sits under the title
-section:      photos          # photos | films | xr  (which portfolio it appears in)
-date:         2025-08-15      # YYYY-MM-DD — newest projects list first
-
-# Optional manual ordering. Higher number floats to the TOP (pin), a negative
-# number sinks to the BOTTOM (force last). Leave blank to order by date.
-order:                        # e.g. 10 to pin near the top, -10 to send last
+title:        CubingUSA Nationals 2026 Doc
+subtitle:     Why do we Setup Cubes?
+section:      Videos         # photos | films | xr  (which portfolio it appears in)
+date:         2023-08-21      # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-cover:        assets/img/projects/my-project/cover.jpg
+cover:        assets\img\Photo Dump\Screenshot 2026-06-23 153802.png
 
 # Optional featured "subphoto" shown large under the description (photo projects).
-subphoto:     assets/img/projects/my-project/feature.jpg
+subphoto:    
 
 # Optional extra photos — as many as you like.
 gallery:
@@ -36,7 +32,7 @@ gallery:
 #   - a local file:                 assets/img/projects/foo/clip.mp4
 # When present, the video becomes the main element of the page and
 # `cover` is used only as the thumbnail on the section page.
-video:        # https://youtu.be/VIDEO_ID
+video:        https://youtu.be/leGO3IGWT8k?si=8LKbpsBDM-EF6Js0
 ---
 
 <!--
@@ -48,4 +44,5 @@ video:        # https://youtu.be/VIDEO_ID
   *italic*, [links](https://example.com), and start a line with ## for a
   subheading.
 -->
+This 
 
