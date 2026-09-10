@@ -609,20 +609,12 @@ main > section.awards { min-height: auto; }
   color: #fff;
   transform: skewX(-4deg);
 }
-.afc-sub {
-  max-width: 42ch;
-  font-size: clamp(0.9rem, 2vw, 1.05rem);
-  line-height: 1.5;
-  color: rgba(237, 236, 232, 0.72);
+.afc-arrow {
+  display: inline-block;
+  color: #b56bff;
+  transition: transform 0.4s var(--ease-spring, ease);
 }
-.afc-cta {
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #fff;
-}
-.athletics-feature-card:hover .afc-cta { color: #b56bff; }
+.athletics-feature-card:hover .afc-arrow { transform: translateX(8px); }
 
 /* Project card — fixed aspect ratio, image fills, gradient overlay */
 .project-card {
