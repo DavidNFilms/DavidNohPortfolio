@@ -4,7 +4,7 @@
 #   grand-canyon-dawn.md  ->  projects/grand-canyon-dawn.html
 # Files starting with "_" (like this one) are ignored by the builder.
 
-title:        CubingUSA Nationals 2026 Doc
+title:        CubingUSA Nationals 2023 Doc
 subtitle:     Why do we Setup Cubes?
 section:      Videos         # photos | films | xr  (which portfolio it appears in)
 date:         2023-08-21      # YYYY-MM-DD — newest projects list first
