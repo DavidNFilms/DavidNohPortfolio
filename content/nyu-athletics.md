@@ -12,7 +12,7 @@
 #  Reachable from the Films page via the "NYU Athletics" feature card.
 # ─────────────────────────────────────────────────────────────────────
 
-title:     My Work for NYU Athletics
+title:     NYU Athletics
 subtitle:
 
 # Paste your Instagram links below, one per line.
