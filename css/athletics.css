@@ -79,13 +79,15 @@
 .ath-title {
   font-family: "Space Grotesk", system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.8rem, 9vw, 7rem);
-  line-height: 0.9;
+  font-size: clamp(2.4rem, 7vw, 5.25rem);
+  line-height: 0.95;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   margin: 0;
+  padding-right: 0.18em;          /* keep the skewed final letter off the edge */
   color: #fff;
   transform: skewX(-4deg);
+  overflow-wrap: normal;          /* never split a word (keeps "Athletics" whole) */
 }
 .ath-sub {
   margin: 24px 0 0;
@@ -111,7 +113,7 @@
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 4 / 5;
   max-height: 76vh;
   justify-self: end;
   background: var(--ath-hero-img, #1a0f2e) center / cover no-repeat;
