@@ -18,10 +18,8 @@ gallery:
 video:        https://youtu.be/sLV9mgjY2XE
 ---
 
-A commercial spot for the Triple Z pillow, produced for Virtual Enterprise.
-The brief was simple: sell the feeling of a better night's sleep in under a
-minute. I handled the concept, shooting, and edit — building a clean,
-product-forward spot that keeps the pillow front and center while leaning on
-pacing and sound to land the "triple Z" promise.
-
-<!-- Edit this description and the date above to match the real project. -->
+A commercial spot for the Triple Z pillow, produced for Virtual Enterprise and
+created for the national commercial competition, where it placed in the global
+top 25%. The brief was simple: sell the feeling of a better night's sleep in
+under a minute — a clean, product-forward spot that keeps the pillow front and
+center while leaning on pacing and sound to land the "triple Z" promise.

@@ -17,9 +17,8 @@ gallery:
 video:        assets/video/charming-commercial.mp4
 ---
 
-A brand commercial for Charming, produced for Virtual Enterprise. Shot around
-a NYC souvenir store and the trade-show floor, the spot follows the charm
-bracelets from shelf to wrist — leaning on warm, film-inflected color and
-quick cuts to sell the feeling of finding the piece that's *you*.
-
-<!-- Edit this description to match the real project. -->
+A brand commercial for Charming, produced for Virtual Enterprise and created
+for the national commercial competition, where it placed in the global top
+25%. The spot follows the charm bracelets from shelf to wrist — leaning on
+warm, film-inflected color and quick cuts to sell the feeling of finding the
+piece that's *you*.
