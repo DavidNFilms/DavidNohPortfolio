@@ -2,7 +2,7 @@
 title:        Triple Z Pillow
 subtitle:     A product commercial for Virtual Enterprise
 section:      films          # photos | films | xr  (which portfolio it appears in)
-date:         2024-02-01     # YYYY-MM-DD — newest projects list first
+date:         2023-02-01     # YYYY-MM-DD — newest projects list first
 
 # Main image. Leave blank for a YouTube video — the builder pulls the
 # video's own thumbnail automatically. Set a path/Drive link to override.
