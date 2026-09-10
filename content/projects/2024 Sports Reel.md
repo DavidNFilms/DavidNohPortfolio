@@ -13,7 +13,7 @@ date:         2024-12-26      # YYYY-MM-DD — newest projects list first
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-cover:       assets\img\Projects\covers\P1095575-Enhanced-NR.jpg
+cover:        assets/img/Projects/covers/P1095575-Enhanced-NR.jpg
 
 # Optional featured "subphoto" shown large under the description (photo projects).
 subphoto:     
@@ -42,4 +42,4 @@ video:        https://youtu.be/Jc1skXjyZjk?si=Q_NGYpredh-3AQvz
   *italic*, [links](https://example.com), and start a line with ## for a
   subheading.
 -->
-This is the a cumilation of the best sports clips of 2024, my first year really experimenting with sports videography. 
+This is a culmination of the best sports clips of 2024, my first year really experimenting with sports videography.

@@ -22,8 +22,8 @@ into styled pages by one command. No web knowledge required.
    | `section`  | Which portfolio it belongs to: `photos`, `films`, or `xr`        |
    | `date`     | `YYYY-MM-DD` — newer projects are listed first                    |
    | `order`    | *(optional)* pin/force order — higher floats to the top, negative sinks to the bottom, blank = by date |
-   | `cover`    | Main photo (also the thumbnail on the section page)              |
-   | `subphoto` | *(optional)* a featured image shown large under the description  |
+   | `cover`    | Main photo (also the thumbnail on the section page). *(optional for video projects — see below)* |
+   | `subphoto` | *(optional)* a featured image under the description, or a captioned "Behind the Scenes" list — see below |
    | `gallery`  | *(optional)* a list of extra photos                              |
    | `video`    | *(video projects only)* a video link — see options below         |
 
@@ -44,9 +44,29 @@ into styled pages by one command. No web knowledge required.
 ## Photo vs. video
 
 - **Leave `video` empty** → a *photo* project: full-bleed cover image at the
-  top, then description, the optional feature subphoto, then the gallery.
+  top, then description, the optional subphoto/process section, then the
+  gallery.
 - **Fill in `video`** → a *video* project: the video plays as the main
-  element at the top of the page, with the description below.
+  element at the top of the page, with the description below, then the
+  optional subphoto/process section, then the gallery.
+
+### Subphoto: plain feature image, or a captioned "Behind the Scenes" section
+
+`subphoto` works two ways:
+
+```
+# one plain image, no caption — shown large, full-width, no heading
+subphoto: assets/img/projects/foo/feature.jpg
+
+# a captioned list — rendered as a "Behind the Scenes" section, good for
+# storyboards, drafts, or on-set photos you want to describe
+subphoto:
+  - assets/img/projects/foo/storyboard.jpg | Early storyboard mapping out the shot flow.
+  - assets/img/projects/foo/set.jpg | On set, testing the framing before the shoot.
+```
+
+Any single entry with a caption (or more than one entry) switches to the
+captioned layout automatically.
 
   Accepted `video` links:
 
@@ -64,6 +84,13 @@ into styled pages by one command. No web knowledge required.
   portrait player (the reel must be on a **public** account to embed).
   For Google Drive, set the file's sharing to **"Anyone with the link"** and
   paste the normal share URL — the builder converts it to an embedded player.
+
+  **Leave `cover` blank on a video project** and the builder fills it in
+  automatically from the video itself — a YouTube link uses that video's
+  thumbnail, a Drive link uses Drive's own generated thumbnail. Vimeo,
+  Instagram, and local video files don't have a predictable thumbnail URL,
+  so those still need a `cover` set by hand (the builder warns if one's
+  missing and it can't auto-fill it).
 
 Image paths are always written from the repo root (e.g.
 `assets/img/projects/foo/cover.jpg`) — the builder fixes up the relative

@@ -17,10 +17,23 @@ order:                        # e.g. 10 to pin near the top, -10 to send last
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+#
+# Optional for VIDEO projects — leave blank and a YouTube or Drive `video`
+# link below fills this in automatically with the video's own thumbnail.
+# Vimeo, Instagram, and local video files can't do this, so set `cover`
+# by hand for those.
 cover:        assets/img/projects/my-project/cover.jpg
 
-# Optional featured "subphoto" shown large under the description (photo projects).
+# Optional featured "subphoto" shown large under the description.
+# A single line with no caption keeps the old plain full-width look:
 subphoto:     assets/img/projects/my-project/feature.jpg
+#
+# Add a caption after a pipe, or list several, to get a captioned
+# "Behind the Scenes" section instead — good for storyboards, drafts,
+# or on-set photos you want to say something about:
+#   subphoto:
+#     - assets/img/projects/my-project/storyboard.jpg | Early storyboard mapping out the shot flow.
+#     - assets/img/projects/my-project/set.jpg | On set, testing the framing before the shoot.
 
 # Optional extra photos — as many as you like.
 gallery:

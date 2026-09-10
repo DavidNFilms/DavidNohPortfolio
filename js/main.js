@@ -82,12 +82,15 @@ document.addEventListener("DOMContentLoaded", () => {
     card.style.transition = "opacity 800ms ease, transform 0.28s ease, box-shadow 0.28s ease";
   });
 
+  let cardsRevealed = false;
+
   function reveal() {
     const y = window.scrollY;
 
     if (y > 200) projectsTitle.style.opacity = "1";
 
-    if (y > 350 && cards.length) {
+    if (y > 350 && cards.length && !cardsRevealed) {
+      cardsRevealed = true;
       // reveal all cards with a small stagger rather than only the first three
       cards.forEach((card, i) => {
         setTimeout(() => {

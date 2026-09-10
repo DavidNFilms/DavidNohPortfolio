@@ -40,5 +40,5 @@ video:        https://drive.google.com/file/d/1hYiXtK4_eIlv7SexODGKSR6ghGABskD7/
   *italic*, [links](https://example.com), and start a line with ## for a
   subheading.
 -->
-During this missions trip, there was a real story to be extracted and I wanted to tell that story. The school in Honduras, built by Promise Church many decades prior, had been abandoned and in poor use. This is the story of us returning to a place to breath life back into what was once a vibrant learning enviornment.
+During this missions trip, there was a real story to be extracted and I wanted to tell that story. The school in Honduras, built by Promise Church many decades prior, had been abandoned and in poor use. This is the story of us returning to a place to breathe life back into what was once a vibrant learning environment.
 

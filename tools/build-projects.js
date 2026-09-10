@@ -115,15 +115,26 @@ function parseProject(file) {
     date:     data.date || '',
     order:    data.order || '',
     cover:    data.cover || '',
-    subphoto: data.subphoto || '',
+    subphotos: normalizeSubphotos(data.subphoto),
     gallery:  Array.isArray(data.gallery) ? data.gallery : [],
     video,
     bodyHtml: mdBody(body),
   };
 
+  // no cover given on a video project — fall back to the video's own thumbnail
+  if (!proj.cover && video) {
+    proj.cover = videoThumbnail(video);
+    if (!proj.cover) {
+      console.warn(`! ${base}: no cover set and no auto-thumbnail available for this video link — set \`cover\` manually.`);
+    }
+  }
+
   // drop image paths whose files don't exist (e.g. leftover template placeholders)
   if (assetMissing(proj.cover))    { console.warn(`! ${base}: cover image not found — ${proj.cover}`); proj.cover = ''; }
-  if (assetMissing(proj.subphoto)) { console.warn(`! ${base}: subphoto not found — ${proj.subphoto}`); proj.subphoto = ''; }
+  proj.subphotos = proj.subphotos.filter(s => {
+    if (assetMissing(s.src)) { console.warn(`! ${base}: subphoto not found — ${s.src}`); return false; }
+    return true;
+  });
   proj.gallery = proj.gallery.filter(g => {
     if (assetMissing(g)) { console.warn(`! ${base}: gallery image not found — ${g}`); return false; }
     return true;
@@ -132,10 +143,26 @@ function parseProject(file) {
   return proj;
 }
 
+// `subphoto` accepts either one plain image path (legacy) or a list of
+// entries, each optionally carrying a caption after a pipe:
+//   subphoto:
+//     - assets/img/projects/foo/storyboard.jpg | Early storyboard mapping out the shot flow.
+function normalizeSubphotos(raw) {
+  if (!raw) return [];
+  const entries = Array.isArray(raw) ? raw : [raw];
+  return entries.filter(Boolean).map(entry => {
+    const [src, ...rest] = String(entry).split('|');
+    return { src: src.trim(), caption: rest.join('|').trim() };
+  });
+}
+
 // true if a local image path points at a file that isn't there (URLs pass)
 function assetMissing(p) {
   if (!p || /^https?:\/\//i.test(p)) return false;
-  return !fs.existsSync(path.join(ROOT, String(p).replace(/^\.?\/+/, '')));
+  // normalize Windows-style backslashes so paths authored on Windows still
+  // resolve on case-sensitive / POSIX filesystems (macOS, GitHub Pages)
+  const clean = String(p).replace(/\\/g, '/').replace(/^\.?\/+/, '');
+  return !fs.existsSync(path.join(ROOT, clean));
 }
 
 function splitFrontmatter(raw) {
@@ -203,11 +230,34 @@ function mdInline(s) {
 function heroSection(p, eyebrow) {
   return `
     <section class="project-hero">
-      ${p.cover ? `<img class="project-cover" src="${imgSrc(p.cover, 'w1600')}" alt="${esc(p.title)}" fetchpriority="high" decoding="async" />` : ''}
+      ${p.cover ? `<img class="project-cover" src="${esc(imgSrc(p.cover, 'w1600'))}" alt="${esc(p.title)}" fetchpriority="high" decoding="async" />` : ''}
       <div class="project-hero-inner project-wrap">
         <p class="project-eyebrow">${esc(eyebrow)}</p>
         <h1 class="project-title">${esc(p.title)}</h1>
         ${p.subtitle ? `<p class="project-subtitle">${esc(p.subtitle)}</p>` : ''}
+      </div>
+    </section>`;
+}
+
+// one plain subphoto with no caption keeps the old full-bleed feature look;
+// a caption or multiple entries switches to a captioned "process" section
+// (storyboards, drafts, on-set shots — described like a behind-the-scenes page)
+function subphotoSection(p) {
+  if (!p.subphotos.length) return '';
+  const descriptive = p.subphotos.length > 1 || p.subphotos.some(s => s.caption);
+  if (!descriptive) {
+    return `
+    <section class="project-feature">
+      <div class="project-wrap"><img src="${esc(imgSrc(p.subphotos[0].src, 'w1600'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></div>
+    </section>`;
+  }
+  return `
+    <section class="project-process">
+      <div class="project-wrap">
+        <h2 class="project-process-title">Behind the Scenes</h2>
+        ${p.subphotos.map(s => `<figure class="process-shot">
+          <img src="${esc(imgSrc(s.src, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" />${s.caption ? `\n          <figcaption>${mdInline(s.caption)}</figcaption>` : ''}
+        </figure>`).join('\n        ')}
       </div>
     </section>`;
 }
@@ -274,17 +324,16 @@ function renderPage(p) {
     <section class="project-intro">
       <div class="project-wrap">${text}
       </div>
-    </section>` : ''}${p.subphoto ? `
-    <section class="project-feature">
-      <div class="project-wrap"><img src="${imgSrc(p.subphoto, 'w1600')}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></div>
     </section>` : ''}`;
   }
+
+  const subphoto = subphotoSection(p);
 
   const gallery = p.gallery.length ? `
     <section class="project-gallery">
       <div class="project-wrap">
         ${p.gallery.map(g =>
-          `<figure class="project-shot"><img src="${imgSrc(g, 'w1200')}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></figure>`
+          `<figure class="project-shot"><img src="${esc(imgSrc(g, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></figure>`
         ).join('\n        ')}
       </div>
     </section>` : '';
@@ -292,7 +341,7 @@ function renderPage(p) {
   return `${head}
 <body class="project project-${p.type}">
 ${navHtml()}
-  <main class="project-page">${main}${gallery}
+  <main class="project-page">${main}${subphoto}${gallery}
     <div class="project-wrap">
       <a class="project-back" href="${backHref}">&larr; Back to ${esc(backLabel)}</a>
     </div>
@@ -384,7 +433,7 @@ function injectCards(section, items) {
 
   const cards = items.map((p, i) => {
     const num = String(offset + i + 1).padStart(2, '0');
-    const img = p.cover ? `\n            <img src="${imgSrc(p.cover, 'w1200')}" alt="${esc(p.title)}" loading="lazy" decoding="async" />` : '';
+    const img = p.cover ? `\n            <img src="${esc(imgSrc(p.cover, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" />` : '';
     return `          <a class="project-card" href="../projects/${p.slug}.html">${img}
             <span class="project-num">${num}</span>
             <span class="project-label">${esc(p.title)}</span>
@@ -416,8 +465,16 @@ function stripQuotes(s) { return s.replace(/^["']|["']$/g, ''); }
 // strip an inline "# comment" (YAML-style: at the value's start or after
 // whitespace) so leftover template comments don't end up in the value
 function cleanVal(s) { return stripQuotes(s.replace(/(^|\s)#.*$/, '$1').trim()); }
+// full escape (including quotes) so this is always safe to drop into an
+// HTML attribute, not just text content — frontmatter values (urls, titles,
+// captions) flow straight from Markdown into src="..."/href="..." below.
 function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 // asset paths are written relative to the repo root; every generated/injected
 // file lives exactly one folder deep, so a single "../" resolves them all.
@@ -445,6 +502,22 @@ function imgSrc(p, size = 'w1600') {
   if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=${size}`;
   return rel(p);
 }
+// best-effort thumbnail for a video link, used to fill in `cover` when a
+// project doesn't set one. Only sources with a predictable, no-network
+// thumbnail URL are handled here (YouTube, Google Drive) — Vimeo, Instagram,
+// and local video files have no static thumbnail URL, so those still need a
+// manual `cover`.
+function videoThumbnail(url) {
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]+)/);
+  if (yt) return `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`;
+
+  // Drive generates thumbnails for video files the same way it does for
+  // images, so the normal Drive thumbnail endpoint just works here too.
+  if (driveId(url)) return url;
+
+  return '';
+}
+
 // Returns { provider, html }. Works for normal AND unlisted YouTube links
 // (unlisted videos embed with the same URL), plus Vimeo, Instagram reels,
 // local video files, and any already-embeddable URL.
@@ -468,17 +541,17 @@ function videoEmbed(url) {
     const permalink = `https://www.instagram.com/${type}/${ig[2]}/`;
     return {
       provider: 'instagram',
-      html: `<blockquote class="instagram-media" data-instgrm-permalink="${permalink}" data-instgrm-version="14"></blockquote>`,
+      html: `<blockquote class="instagram-media" data-instgrm-permalink="${esc(permalink)}" data-instgrm-version="14"></blockquote>`,
     };
   }
 
   if (/\.(mp4|webm|mov)$/i.test(url)) {
-    return { provider: 'file', html: `<video src="${rel(url)}" controls playsinline></video>` };
+    return { provider: 'file', html: `<video src="${esc(rel(url))}" controls playsinline></video>` };
   }
   return { provider: 'other', html: iframe(url) }; // assume already-embeddable
 }
 function iframe(src) {
-  return `<iframe src="${src}" title="Video" loading="lazy" frameborder="0" ` +
+  return `<iframe src="${esc(src)}" title="Video" loading="lazy" frameborder="0" ` +
          `allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ` +
          `allowfullscreen></iframe>`;
 }

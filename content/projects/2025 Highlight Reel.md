@@ -13,7 +13,7 @@ date:         2025-12-30   # YYYY-MM-DD — newest projects list first
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-cover:       assets\img\still-moving\Two dozen\23.jpg
+cover:        assets/img/still-moving/Two dozen/23.jpg
 
 # Optional featured "subphoto" shown large under the description (photo projects).
 subphoto:     
@@ -42,4 +42,4 @@ video:        https://www.youtube.com/watch?v=yTE-LutCCyM
   *italic*, [links](https://example.com), and start a line with ## for a
   subheading.
 -->
-This is the a cumilation of the best sports clips of 2025, where I did everything from sports, commercials, to even mini docs
+This is a culmination of the best sports clips of 2025, where I did everything from sports, commercials, to even mini docs.
