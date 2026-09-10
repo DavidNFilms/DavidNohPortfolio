@@ -568,6 +568,62 @@ main > section.awards { min-height: auto; }
   margin: 0;
 }
 
+/* Featured banner linking to the standalone NYU Athletics wall. Spans the full
+   grid width and uses a distinct violet look to set it apart from the project
+   cards (its design echoes css/athletics.css). */
+.athletics-feature-card {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(28px, 5vw, 52px);
+  overflow: hidden;
+  text-decoration: none;
+  isolation: isolate;
+  background:
+    radial-gradient(600px 300px at 88% -30%, rgba(181, 107, 255, 0.55), transparent 60%),
+    linear-gradient(100deg, #150a26 0%, #2a0f4d 55%, #4b188a 100%);
+  border: 1px solid rgba(181, 107, 255, 0.28);
+  transition: transform 0.5s var(--ease-spring, ease), box-shadow 0.5s var(--ease-spring, ease);
+}
+.athletics-feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(75, 24, 138, 0.5);
+}
+.afc-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #b56bff;
+}
+.afc-title {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 6vw, 3.6rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  transform: skewX(-4deg);
+}
+.afc-sub {
+  max-width: 42ch;
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  line-height: 1.5;
+  color: rgba(237, 236, 232, 0.72);
+}
+.afc-cta {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.athletics-feature-card:hover .afc-cta { color: #b56bff; }
+
 /* Project card — fixed aspect ratio, image fills, gradient overlay */
 .project-card {
   position: relative;

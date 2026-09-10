@@ -27,6 +27,10 @@ const ROOT = path.resolve(__dirname, '..');
 const SRC  = path.join(ROOT, 'content', 'projects');
 const OUT  = path.join(ROOT, 'projects');
 
+// standalone "Instagram wall" page — one Markdown file, its own design
+const ATHLETICS_SRC = path.join(ROOT, 'content', 'nyu-athletics.md');
+const ATHLETICS_OUT = path.join(ROOT, 'Athletics', 'index.html');
+
 // section key -> the index page whose grid receives the generated cards
 const SECTION_INDEX = {
   photos: 'Photos/index.html',
@@ -89,7 +93,86 @@ function main() {
     injectCards(section, bySection[section] || []);
   }
 
+  // 5. build the standalone NYU Athletics instagram wall (its own design)
+  buildAthletics();
+
   console.log(`\nDone — ${projects.length} project page(s) built.`);
+}
+
+/* ── NYU Athletics: a standalone Instagram-wall page ─────────────────
+ * One Markdown file (content/nyu-athletics.md) → one page (Athletics/
+ * index.html) with its own look. Add Instagram links under `posts:` and
+ * re-run; the page is fully regenerated each build.
+ */
+function buildAthletics() {
+  if (!fs.existsSync(ATHLETICS_SRC)) return;
+
+  const { data, body } = splitFrontmatter(fs.readFileSync(ATHLETICS_SRC, 'utf8'));
+  const title    = data.title || 'NYU Athletics';
+  const subtitle = data.subtitle || '';
+  const posts    = (Array.isArray(data.posts) ? data.posts : [])
+    .map(u => String(u).trim())
+    .filter(Boolean);
+
+  // keep only real Instagram links, turned into official embed blockquotes
+  const embeds = posts
+    .map(u => videoEmbed(u))
+    .filter(v => v.provider === 'instagram');
+  const dropped = posts.length - embeds.length;
+  if (dropped > 0) {
+    console.warn(`! nyu-athletics.md: ignored ${dropped} link(s) that aren't Instagram post/reel URLs.`);
+  }
+
+  const wall = embeds.length
+    ? `      <div class="ig-wall">
+${embeds.map(v => `        <div class="ig-wall-item">${v.html}</div>`).join('\n')}
+      </div>`
+    : `      <p class="ig-wall-empty">Fresh work is on the way — check back soon.</p>`;
+
+  const bodyHtml = mdBody(body);
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  ${GEN_MARK}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
+  <title>${esc(title)} — David Noh</title>
+  <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/athletics.css" />
+</head>
+<body class="athletics">
+${navHtml()}
+  <main class="athletics-page">
+    <section class="athletics-hero">
+      <div class="athletics-hero-inner">
+        <p class="athletics-eyebrow">Instagram wall</p>
+        <h1 class="athletics-title">${esc(title)}</h1>
+        ${subtitle ? `<p class="athletics-subtitle">${esc(subtitle)}</p>` : ''}
+        <a class="athletics-back" href="../Video/index.html">&larr; Back to Films</a>
+      </div>
+    </section>
+    <section class="athletics-wall-section">
+      ${bodyHtml ? `<div class="athletics-intro">${bodyHtml}</div>` : ''}
+${wall}
+    </section>
+${contactHtml()}
+  </main>
+  <script src="../js/main.js"></script>
+  <script async src="https://www.instagram.com/embed.js"></script>
+</body>
+</html>
+`;
+
+  fs.mkdirSync(path.dirname(ATHLETICS_OUT), { recursive: true });
+  fs.writeFileSync(ATHLETICS_OUT, html, 'utf8');
+  console.log(`page   Athletics/index.html   (instagram wall · ${embeds.length} post${embeds.length === 1 ? '' : 's'})`);
 }
 
 /* ── parsing ─────────────────────────────────────────────────────── */

@@ -13,10 +13,10 @@ date:         2025-06-01      # YYYY-MM-DD — newest projects list first
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-cover:        https://drive.google.com/file/d/1_AFJNE3rgf17F-w1Hes-PnGQ9SJHo6NZ/view?usp=drive_link
+cover:        assets/img/Projects/covers/honduras-missions-2025.jpg
 
 # Optional featured "subphoto" shown large under the description (photo projects).
-subphoto:     https://drive.google.com/file/d/1nkVYI_xzleBtXGlcySwZITCRMk1kKTEi/view?usp=drive_link
+subphoto:     assets/img/Projects/Subphotos/honduras-missions-2025-sub.jpg
 
 # Optional extra photos — as many as you like.
 
