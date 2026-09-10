@@ -615,6 +615,12 @@ main > section.awards { min-height: auto; }
   transition: transform 0.4s var(--ease-spring, ease);
 }
 .athletics-feature-card:hover .afc-arrow { transform: translateX(8px); }
+.afc-sub {
+  margin-top: 2px;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  line-height: 1.4;
+  color: rgba(237, 236, 232, 0.72);
+}
 
 /* Project card — fixed aspect ratio, image fills, gradient overlay */
 .project-card {
