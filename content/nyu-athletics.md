@@ -16,10 +16,19 @@
 title:     NYU Athletics
 subtitle:  Sideline to highlight — game-day motion work for NYU Athletics.
 
-# Paste your Instagram links below, one per line:
+# Paste your Instagram links below, one per line.
+# The first one is pinned (shows first on the wall).
 posts:
-  # - https://www.instagram.com/reel/PASTE_ID_HERE/
-  # - https://www.instagram.com/p/PASTE_ID_HERE/
+  - https://www.instagram.com/reel/DRXzXkhEbyn/
+  - https://www.instagram.com/reel/DV3hVd0jR0L/
+  - https://www.instagram.com/reel/DVRQ69SkQgz/
+  - https://www.instagram.com/reel/DVJbBA7DRkw/
+  - https://www.instagram.com/p/DQzqBOujxv2/
+  - https://www.instagram.com/reel/DOYuU6zEcz7/
+  - https://www.instagram.com/reel/DQwxKL9CD9G/
+  - https://www.instagram.com/reel/DPpFN8vD_vX/
+  - https://www.instagram.com/reel/DPjrEu9Dw-T/
+  - https://www.instagram.com/reel/DPo6ChejXNL/
 ---
 
 Ongoing coverage of NYU Athletics — capturing the speed, the crowd, and the
