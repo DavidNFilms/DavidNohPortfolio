@@ -28,8 +28,9 @@ const SRC  = path.join(ROOT, 'content', 'projects');
 const OUT  = path.join(ROOT, 'projects');
 
 // standalone "Instagram wall" page — one Markdown file, its own design
-const ATHLETICS_SRC = path.join(ROOT, 'content', 'nyu-athletics.md');
-const ATHLETICS_OUT = path.join(ROOT, 'Athletics', 'index.html');
+const ATHLETICS_SRC    = path.join(ROOT, 'content', 'nyu-athletics.md');
+const ATHLETICS_OUT    = path.join(ROOT, 'Athletics', 'index.html');
+const ATHLETICS_COVERS = path.join(ROOT, 'assets', 'img', 'nyu-athletics');
 
 // section key -> the index page whose grid receives the generated cards
 const SECTION_INDEX = {
@@ -107,29 +108,63 @@ function main() {
 function buildAthletics() {
   if (!fs.existsSync(ATHLETICS_SRC)) return;
 
-  const { data, body } = splitFrontmatter(fs.readFileSync(ATHLETICS_SRC, 'utf8'));
+  const { data } = splitFrontmatter(fs.readFileSync(ATHLETICS_SRC, 'utf8'));
   const title    = data.title || 'NYU Athletics';
   const subtitle = data.subtitle || '';
-  const posts    = (Array.isArray(data.posts) ? data.posts : [])
+  const rawPosts = (Array.isArray(data.posts) ? data.posts : [])
     .map(u => String(u).trim())
     .filter(Boolean);
 
-  // keep only real Instagram links, turned into official embed blockquotes
-  const embeds = posts
-    .map(u => videoEmbed(u))
-    .filter(v => v.provider === 'instagram');
-  const dropped = posts.length - embeds.length;
-  if (dropped > 0) {
-    console.warn(`! nyu-athletics.md: ignored ${dropped} link(s) that aren't Instagram post/reel URLs.`);
+  // resolve each link to { permalink, cover } — cover is a locally-saved
+  // frame (see tools/fetch-ig-covers.js) so the wall shows plain images with
+  // none of Instagram's embed chrome. Links that aren't IG posts are dropped.
+  const items = [];
+  let missing = 0;
+  for (const url of rawPosts) {
+    const info = igInfo(url);
+    if (!info) continue;
+    const coverFile = path.join(ATHLETICS_COVERS, `${info.code}.jpg`);
+    const cover = fs.existsSync(coverFile) ? `../assets/img/nyu-athletics/${info.code}.jpg` : '';
+    if (!cover) missing++;
+    items.push({ permalink: info.permalink, cover });
   }
+  const dropped = rawPosts.length - items.length;
+  if (dropped > 0) console.warn(`! nyu-athletics.md: ignored ${dropped} link(s) that aren't Instagram post/reel URLs.`);
+  if (missing > 0) console.warn(`! nyu-athletics: ${missing} post(s) have no local cover — run tools/fetch-ig-covers.js (or drop a JPG in assets/img/nyu-athletics/).`);
 
-  const wall = embeds.length
-    ? `      <div class="ig-wall">
-${embeds.map(v => `        <div class="ig-wall-item">${v.html}</div>`).join('\n')}
-      </div>`
-    : `      <p class="ig-wall-empty">Fresh work is on the way — check back soon.</p>`;
+  const [pinned, ...rest] = items;
 
-  const bodyHtml = mdBody(body);
+  // full-viewport hero built around the pinned reel; scroll cue leads to the wall
+  const hero = pinned ? `
+    <section class="ath-hero"${pinned.cover ? ` style="--ath-hero-img:url('${esc(pinned.cover)}')"` : ''}>
+      <a class="ath-hero-media${pinned.cover ? '' : ' ath-no-cover'}" href="${esc(pinned.permalink)}" target="_blank" rel="noopener" aria-label="Play the pinned reel on Instagram">
+        <span class="ath-play" aria-hidden="true"></span>
+      </a>
+      <div class="ath-hero-copy">
+        <h1 class="ath-title">${esc(title)}</h1>
+        ${subtitle ? `<p class="ath-sub">${esc(subtitle)}</p>` : ''}
+        <a class="ath-back" href="../Video/index.html">&larr; Back to Films</a>
+      </div>
+      <a class="ath-scroll" href="#wall" aria-label="Scroll to more">More work<span aria-hidden="true"></span></a>
+    </section>` : `
+    <section class="ath-hero ath-hero--empty">
+      <div class="ath-hero-copy">
+        <h1 class="ath-title">${esc(title)}</h1>
+        ${subtitle ? `<p class="ath-sub">${esc(subtitle)}</p>` : ''}
+        <a class="ath-back" href="../Video/index.html">&larr; Back to Films</a>
+      </div>
+    </section>`;
+
+  const tiles = rest.map(it => `        <a class="ath-tile${it.cover ? '' : ' ath-no-cover'}" href="${esc(it.permalink)}" target="_blank" rel="noopener" aria-label="Watch on Instagram">
+${it.cover ? `          <img src="${esc(it.cover)}" alt="" loading="lazy" decoding="async" />\n` : ''}          <span class="ath-play" aria-hidden="true"></span>
+        </a>`).join('\n');
+
+  const wall = rest.length ? `
+    <section class="ath-wall" id="wall">
+      <div class="ath-grid">
+${tiles}
+      </div>
+    </section>` : '';
 
   const html = `<!doctype html>
 <html lang="en">
@@ -150,29 +185,27 @@ ${embeds.map(v => `        <div class="ig-wall-item">${v.html}</div>`).join('\n'
 <body class="athletics">
 ${navHtml()}
   <main class="athletics-page">
-    <section class="athletics-hero">
-      <div class="athletics-hero-inner">
-        <p class="athletics-eyebrow">Instagram wall</p>
-        <h1 class="athletics-title">${esc(title)}</h1>
-        ${subtitle ? `<p class="athletics-subtitle">${esc(subtitle)}</p>` : ''}
-        <a class="athletics-back" href="../Video/index.html">&larr; Back to Films</a>
-      </div>
-    </section>
-    <section class="athletics-wall-section">
-      ${bodyHtml ? `<div class="athletics-intro">${bodyHtml}</div>` : ''}
+${hero}
 ${wall}
-    </section>
 ${contactHtml()}
   </main>
   <script src="../js/main.js"></script>
-  <script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>
 `;
 
   fs.mkdirSync(path.dirname(ATHLETICS_OUT), { recursive: true });
   fs.writeFileSync(ATHLETICS_OUT, html, 'utf8');
-  console.log(`page   Athletics/index.html   (instagram wall · ${embeds.length} post${embeds.length === 1 ? '' : 's'})`);
+  console.log(`page   Athletics/index.html   (nyu athletics wall · ${items.length} post${items.length === 1 ? '' : 's'})`);
+}
+
+// pull the shortcode out of an Instagram post/reel URL and return a clean
+// canonical permalink (tracking params stripped)
+function igInfo(url) {
+  const m = String(url).match(/instagram\.com\/(reel|reels|p|tv)\/([\w-]+)/i);
+  if (!m) return null;
+  const type = m[1].toLowerCase() === 'reels' ? 'reel' : m[1].toLowerCase();
+  return { code: m[2], permalink: `https://www.instagram.com/${type}/${m[2]}/` };
 }
 
 /* ── parsing ─────────────────────────────────────────────────────── */

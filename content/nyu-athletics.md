@@ -2,19 +2,18 @@
 # ─────────────────────────────────────────────────────────────────────
 #  NYU ATHLETICS  —  Instagram wall
 #
-#  Add your NYU Athletics work here as a list of Instagram links, then run:
-#     node tools/build-projects.js
-#  and the page rebuilds automatically at  Athletics/index.html
-#  (reachable from the Films page via the "NYU Athletics" feature card).
+#  Add your NYU Athletics work as Instagram links under `posts:` below, then:
+#     node tools/fetch-ig-covers.js   (downloads each reel's cover image)
+#     node tools/build-projects.js    (rebuilds Athletics/index.html)
 #
-#  Any public Instagram post, reel, or IGTV link works, e.g.
-#     https://www.instagram.com/reel/ABC123def/
-#     https://www.instagram.com/p/ABC123def/
-#  Paste one per line under `posts:`, each starting with "- ".
+#  Any public Instagram post or reel link works. Paste one per line under
+#  `posts:`, each starting with "- ". The FIRST link is the pinned reel — it
+#  gets the full-screen hero; the rest tile into the wall below it.
+#  Reachable from the Films page via the "NYU Athletics" feature card.
 # ─────────────────────────────────────────────────────────────────────
 
-title:     NYU Athletics
-subtitle:  Sideline to highlight — game-day motion work for NYU Athletics.
+title:     My Work for NYU Athletics
+subtitle:
 
 # Paste your Instagram links below, one per line.
 # The first one is pinned (shows first on the wall).
