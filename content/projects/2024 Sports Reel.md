@@ -13,7 +13,7 @@ date:         2024-12-26      # YYYY-MM-DD — newest projects list first
 # Drive share link (set the file's sharing to "Anyone with the link").
 #   local:  assets/img/projects/my-project/cover.jpg
 #   drive:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-cover:        assets/img/Projects/covers/P1095575-Enhanced-NR.jpg
+cover:        assets/img/Projects/covers/sports-reel-2024.jpg
 
 # Optional featured "subphoto" shown large under the description (photo projects).
 subphoto:     
