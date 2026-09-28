@@ -28,6 +28,7 @@ posts:
   - https://www.instagram.com/reel/DPpFN8vD_vX/
   - https://www.instagram.com/reel/DPjrEu9Dw-T/
   - https://www.instagram.com/reel/DPo6ChejXNL/
+  - https://www.instagram.com/reel/DdZyEnjxXeB/
 ---
 
 Ongoing coverage of NYU Athletics — capturing the speed, the crowd, and the
