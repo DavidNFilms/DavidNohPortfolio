@@ -7,11 +7,16 @@
 title:        Project Title Here
 subtitle:     One-line description that sits under the title
 section:      photos          # photos | films | xr  (which portfolio it appears in)
+category:                     # optional — e.g. Documentary, Commercial, Reel, Short Film. Shown on the card and used for the filter chips
 date:         2025-08-15      # YYYY-MM-DD — newest projects list first
 
 # Optional manual ordering. Higher number floats to the TOP (pin), a negative
 # number sinks to the BOTTOM (force last). Leave blank to order by date.
 order:                        # e.g. 10 to pin near the top, -10 to send last
+
+# Optional: `true` shows this project in "Latest films" on the home page
+# (otherwise the home page shows the three newest films).
+featured:
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google
 # Drive share link (set the file's sharing to "Anyone with the link").
@@ -35,7 +40,8 @@ subphoto:     assets/img/projects/my-project/feature.jpg
 #     - assets/img/projects/my-project/storyboard.jpg | Early storyboard mapping out the shot flow.
 #     - assets/img/projects/my-project/set.jpg | On set, testing the framing before the shoot.
 
-# Optional extra photos — as many as you like.
+# Optional extra photos — as many as you like. Add " | caption" after a path
+# to describe a photo (used as its alt text and shown in the full-screen viewer).
 gallery:
   - assets/img/projects/my-project/1.jpg
   - assets/img/projects/my-project/2.jpg
@@ -50,6 +56,10 @@ gallery:
 # When present, the video becomes the main element of the page and
 # `cover` is used only as the thumbnail on the section page.
 video:        # https://youtu.be/VIDEO_ID
+
+# Optional, video only: the film's shape, so the player fits it exactly.
+# 16:9 is the default; use 9:16 for vertical video, 2.39:1 for scope, 4:3, 1:1…
+aspect:
 ---
 
 <!--

@@ -1,49 +1,109 @@
 #!/usr/bin/env node
 /**
- * build-projects.js — turn Markdown files into styled project pages.
+ * build-projects.js — the one command that builds the site.
  *
- *   node tools/build-projects.js
+ *   node tools/build-projects.js        (or: npm run build)
  *
- * Each project is ONE Markdown file in content/projects/ with a small
- * frontmatter block at the top. This script reads them all and:
- *   1. writes a styled page per project to  projects/<slug>.html
- *   2. injects matching cards into the section index pages
- *      (Photos / Films / XR) between the PROJECTS markers.
+ * What it does, every run:
+ *   1. turns each Markdown file in content/projects/ into projects/<slug>.html
+ *   2. injects project cards (and filter chips) into the section pages
+ *      and the home page, between their PROJECTS / FILTERS marker comments
+ *   3. rebuilds the NYU Athletics wall, the privacy page and the XR redirect
+ *   4. stamps the SAME header, navigation, contact block, footer and <head>
+ *      tags into every hand-written page, between its SHARED marker comments —
+ *      so the chrome can never drift between pages
+ *   5. makes resized WebP copies of every image a page uses and adds
+ *      srcset / width / height (see tools/lib/images.js)
+ *   6. writes sitemap.xml
  *
- * It is fully re-runnable: every build wipes and rebuilds the generated
- * pages and the marked card regions, so deleting a .md file and
- * re-running removes its page and card automatically.
+ * It is fully re-runnable: delete a .md file, run it again, and that page,
+ * its card and its sitemap entry are gone.
  *
- * No dependencies — just run it with Node.
+ * No npm dependencies — just Node. Image resizing additionally uses `cwebp`
+ * (brew install webp); without it the build still succeeds.
  *
- * See content/projects/_TEMPLATE.md for the file structure and
- * content/README.md for the full guide.
+ * See content/README.md for the full guide.
  */
 
-const fs   = require('fs');
-const path = require('path');
+const fs     = require('fs');
+const path   = require('path');
+const crypto = require('crypto');
+const images = require('./lib/images');
 
 const ROOT = path.resolve(__dirname, '..');
 const SRC  = path.join(ROOT, 'content', 'projects');
 const OUT  = path.join(ROOT, 'projects');
 
-// standalone "Instagram wall" page — one Markdown file, its own design
-const ATHLETICS_SRC    = path.join(ROOT, 'content', 'nyu-athletics.md');
-const ATHLETICS_OUT    = path.join(ROOT, 'Athletics', 'index.html');
-const ATHLETICS_COVERS = path.join(ROOT, 'assets', 'img', 'nyu-athletics');
+/* ── site-wide facts: change them here, every page follows ─────────── */
 
-// section key -> the index page whose grid receives the generated cards
-const SECTION_INDEX = {
-  photos: 'Photos/index.html',
-  films:  'Video/index.html',
-  xr:     'XR/underconstruction.html',
+const SITE = {
+  url:       'https://davidnoh.com',
+  name:      'David Noh',
+  role:      'Filmmaker, Photographer & XR Designer',
+  tagline:   'Filmmaker, photographer and XR designer blending design, technology, and storytelling.',
+  email:     'Daviddwnoh@gmail.com',
+  instagram: { handle: '@davidnfilms', url: 'https://instagram.com/davidnfilms' },
+  youtube:   { handle: '@Davidnfilms25', url: 'https://www.youtube.com/@Davidnfilms25' },
+  linkedin:  { handle: 'daviddwnoh', url: 'https://www.linkedin.com/in/daviddwnoh' },
+  ogImage:   'assets/img/hero.jpg',
+  logo:      'assets/icons/Logo v2 White Trans.png',
+  favicon:   'assets/favicon/Logo v2 Black Bkg.png',
 };
-const SECTION_LABEL = { photos: 'Photos', films: 'Films', xr: 'XR' };
+
+// main navigation, in order
+const NAV = [
+  { key: 'films',  label: 'Films', href: 'Video/index.html' },
+  { key: 'photos', label: 'Photo', href: 'Photos/index.html' },
+  { key: 'xr',     label: 'XR',    href: 'XR/index.html' },
+  { key: 'about',  label: 'About', href: 'About/about.html' },
+];
+
+// hand-written pages that receive the shared chrome
+const PAGES = [
+  { file: 'index.html',                url: '/',                 nav: 'home' },
+  { file: 'Video/index.html',          url: '/Video/',           nav: 'films' },
+  { file: 'Photos/index.html',         url: '/Photos/',          nav: 'photos' },
+  { file: 'XR/index.html',             url: '/XR/',              nav: 'xr' },
+  { file: 'About/about.html',          url: '/About/about.html', nav: 'about' },
+  { file: 'minute-privacy/index.html', url: '/minute-privacy/',  nav: '' },
+  // GitHub Pages serves 404.html from ANY path, so it uses root-absolute links
+  { file: '404.html',                  url: '/404.html',         nav: '', prefix: '/', sitemap: false, noindex: true },
+];
+
+// section key -> the page whose grid receives that section's cards
+const SECTION_INDEX = { films: 'Video/index.html', photos: 'Photos/index.html', xr: 'XR/index.html' };
+const SECTION_LABEL = { films: 'Films', photos: 'Photo', xr: 'XR' };
+const EMPTY_STATE = {
+  films:  { title: 'New films coming soon.' },
+  photos: { title: 'New galleries coming soon.' },
+  xr:     { title: 'XR projects coming soon.' },
+};
+
+// standalone "Instagram wall" page
+const ATHLETICS_SRC = path.join(ROOT, 'content', 'nyu-athletics.md');
+const ATHLETICS_OUT = 'Athletics/index.html';
+const ATHLETICS_COVERS = 'assets/img/nyu-athletics';
+
+// covers pulled in by tools/localize-assets.js (YouTube / Drive thumbnails)
+const AUTO_COVERS = 'assets/img/Projects/covers/auto';
+const LOCAL_FONT  = 'assets/fonts/SpaceGrotesk-latin.woff2';
 
 // stamped into every generated page so we only ever delete our own files
-const GEN_MARK = '<!-- generated by tools/build-projects.js -->';
+const GEN_MARK = '<!-- generated by tools/build-projects.js — edit the source, not this file -->';
+const OLD_GEN_MARK = '<!-- generated by tools/build-projects.js -->';
 
-main();
+const PROVIDERS = {
+  youtube:   { name: 'YouTube',      policy: 'https://policies.google.com/privacy' },
+  gdrive:    { name: 'Google Drive', policy: 'https://policies.google.com/privacy' },
+  vimeo:     { name: 'Vimeo',        policy: 'https://vimeo.com/privacy' },
+  instagram: { name: 'Instagram',    policy: 'https://privacycenter.instagram.com/policy' },
+  other:     { name: 'an external player', policy: '' },
+};
+
+const YEAR = new Date().getFullYear();
+const fontsLocal = fs.existsSync(path.join(ROOT, LOCAL_FONT));
+const warnings = [];
+const warn = msg => { warnings.push(msg); console.warn(`! ${msg}`); };
 
 function main() {
   if (!fs.existsSync(SRC)) {
@@ -51,27 +111,23 @@ function main() {
     console.error(`Create it and add Markdown files (see content/projects/_TEMPLATE.md).`);
     process.exit(1);
   }
-  if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
+  fs.mkdirSync(OUT, { recursive: true });
 
-  // 1. remove previously generated pages (only ones we stamped)
+  // 1. remove previously generated project pages (only ones we stamped)
   for (const f of fs.readdirSync(OUT)) {
     if (!f.endsWith('.html')) continue;
     const p = path.join(OUT, f);
-    if (fs.readFileSync(p, 'utf8').includes(GEN_MARK)) fs.unlinkSync(p);
+    const txt = fs.readFileSync(p, 'utf8');
+    if (txt.includes(GEN_MARK) || txt.includes(OLD_GEN_MARK)) fs.unlinkSync(p);
   }
 
-  // 2. parse every project file
-  const files = fs.readdirSync(SRC)
-    .filter(f => f.endsWith('.md') && !f.startsWith('_'));
-
-  if (files.length === 0) {
-    console.log('No project Markdown files found. Add one to content/projects/.');
-  }
+  // 2. parse + sort every project
+  const files = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith('_'));
+  if (files.length === 0) console.log('No project Markdown files found. Add one to content/projects/.');
 
   const projects = files.map(f => parseProject(path.join(SRC, f)));
   // Ordering: an explicit `order` wins — higher floats to the top (pin),
-  // negative sinks to the bottom (force last); blank counts as 0. Projects with
-  // the same order fall back to newest date first, then title.
+  // negative sinks to the bottom; blank counts as 0. Ties: newest date, then title.
   projects.sort((a, b) => {
     const ao = Number(a.order) || 0;
     const bo = Number(b.order) || 0;
@@ -81,131 +137,517 @@ function main() {
     return (a.title || '').localeCompare(b.title || '');
   });
 
-  // 3. write a page per project
+  const seen = {};
   for (const p of projects) {
-    fs.writeFileSync(path.join(OUT, `${p.slug}.html`), renderPage(p), 'utf8');
+    if (seen[p.slug]) warn(`two files produce the same page address "projects/${p.slug}.html": ${seen[p.slug]} and ${p.file}`);
+    seen[p.slug] = p.file;
+  }
+
+  const bySection = {};
+  for (const p of projects) (bySection[p.section] = bySection[p.section] || []).push(p);
+
+  const sitemap = [];
+  const pageUrls = [];
+
+  // 3. a page per project
+  for (const p of projects) {
+    const list = bySection[p.section] || [];
+    const i = list.indexOf(p);
+    writePage(`projects/${p.slug}.html`, renderProject(p, list[i - 1], list[i + 1]));
+    sitemap.push({ url: `/projects/${p.slug}.html`, date: p.date });
     console.log(`page   projects/${p.slug}.html   (${p.type} · ${p.section})`);
   }
 
-  // 4. inject cards into every section index that has markers
-  const bySection = {};
-  for (const p of projects) (bySection[p.section] = bySection[p.section] || []).push(p);
-  for (const section of Object.keys(SECTION_INDEX)) {
-    injectCards(section, bySection[section] || []);
+  // 4. standalone generated pages
+  if (buildAthletics()) sitemap.push({ url: '/Athletics/' });
+  buildPrivacy(projects);
+  sitemap.push({ url: '/privacy/' });
+  writePage('XR/underconstruction.html', redirectPage('index.html', 'XR — David Noh'));
+
+  // 5. hand-written pages: cards, filters, shared chrome
+  const featured = pickFeatured(projects);
+  for (const page of PAGES) {
+    const abs = path.join(ROOT, page.file);
+    if (!fs.existsSync(abs)) { warn(`${page.file} is listed in PAGES but doesn't exist.`); continue; }
+    let html = fs.readFileSync(abs, 'utf8');
+    const prefix = prefixFor(page);
+
+    for (const section of Object.keys(SECTION_INDEX)) {
+      if (SECTION_INDEX[section] !== page.file) continue;
+      const items = bySection[section] || [];
+      html = setRegion(html, `PROJECTS:${section}`, cardsHtml(items, prefix, section), page.file, items.length > 0);
+      html = setRegion(html, `FILTERS:${section}`, filtersHtml(items), page.file, false);
+      if (items.length) console.log(`cards  ${page.file}   (${items.length})`);
+    }
+    html = setRegion(html, 'PROJECTS:featured', cardsHtml(featured, prefix, 'featured'), page.file, false);
+
+    const title = (html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || SITE.name;
+    const description = (html.match(/<meta\s+name="description"\s+content="([^"]*)"/i) || [])[1] || '';
+    if (!description && !page.noindex) warn(`${page.file} has no <meta name="description"> — add one above the SHARED:head markers.`);
+
+    html = setRegion(html, 'SHARED:head', sharedHead({
+      prefix, url: page.url, title: unesc(title.trim()), description: unesc(description),
+      noindex: page.noindex, jsonld: page.nav === 'home' ? [personLd()] : [],
+    }), page.file, true);
+    html = setRegion(html, 'SHARED:nav', navHtml(prefix, page.nav), page.file, true);
+    html = setRegion(html, 'SHARED:footer', footerHtml(prefix), page.file, true);
+
+    writePage(page.file, html);
+    if (page.sitemap !== false) pageUrls.push({ url: page.url });
   }
 
-  // 5. build the standalone NYU Athletics instagram wall (its own design)
-  buildAthletics();
+  // 6. sitemap
+  writeSitemap(pageUrls.concat(sitemap));
+  images.save();
 
-  console.log(`\nDone — ${projects.length} project page(s) built.`);
+  const s = images.stats;
+  console.log(`\nimages ${s.encoded} resized, ${s.reused} already up to date` +
+              (images.haveCwebp() ? '' : `  (cwebp not found — install it with "brew install webp" to get responsive images)`));
+  if (!fontsLocal) console.log('fonts  Space Grotesk still loads from Google Fonts — run "node tools/localize-assets.js" to self-host it.');
+  console.log(`\nDone — ${projects.length} project page(s) built` +
+              (warnings.length ? `, ${warnings.length} warning(s) above.` : '.'));
+}
+
+/* ── shared chrome ───────────────────────────────────────────────── */
+
+// how a page reaches the repo root: "" (root), "../" (one folder deep) or "/"
+function prefixFor(page) {
+  if (typeof page === 'object' && page.prefix != null) return page.prefix;
+  const file = typeof page === 'string' ? page : page.file;
+  const depth = file.split('/').length - 1;
+  return '../'.repeat(depth);
+}
+
+// short fingerprint of a file, appended as ?v= so browsers (and GitHub Pages'
+// 10-minute cache) pick up a new stylesheet or script the moment it changes
+const _ver = {};
+function ver(rel) {
+  if (!_ver[rel]) {
+    const abs = path.join(ROOT, rel);
+    _ver[rel] = fs.existsSync(abs)
+      ? crypto.createHash('sha1').update(fs.readFileSync(abs)).digest('hex').slice(0, 8)
+      : '0';
+  }
+  return `${rel}?v=${_ver[rel]}`;
+}
+
+function absUrl(p) { return SITE.url + (p.startsWith('/') ? p : '/' + p); }
+
+// everything in <head> below the page's own <title> and description
+function sharedHead({ prefix, url, title, description, image, type, css = [], jsonld = [], noindex }) {
+  const og = images.socialImage(image || SITE.ogImage) || images.socialImage(SITE.ogImage);
+  const ogUrl = og ? absUrl(encodeURI(og)) : '';
+  const fonts = fontsLocal
+    ? `<link rel="preload" href="${prefix}${LOCAL_FONT}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="${prefix}${ver('css/fonts.css')}">`
+    : `<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">`;
+
+  const lines = [
+    noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${esc(absUrl(url))}">`,
+    '<meta name="author" content="David Noh">',
+    '<meta name="theme-color" content="#101010">',
+    '<meta name="color-scheme" content="dark">',
+    '<meta name="referrer" content="strict-origin-when-cross-origin">',
+    `<meta property="og:site_name" content="${esc(SITE.name)}">`,
+    `<meta property="og:type" content="${type || 'website'}">`,
+    `<meta property="og:title" content="${esc(title)}">`,
+    description ? `<meta property="og:description" content="${esc(description)}">` : '',
+    noindex ? '' : `<meta property="og:url" content="${esc(absUrl(url))}">`,
+    ogUrl ? `<meta property="og:image" content="${esc(ogUrl)}">` : '',
+    `<meta name="twitter:card" content="${ogUrl ? 'summary_large_image' : 'summary'}">`,
+    `<link rel="icon" type="image/png" href="${prefix}${encodeURI(SITE.favicon)}">`,
+    `<link rel="apple-touch-icon" href="${prefix}${encodeURI(SITE.favicon)}">`,
+    fonts,
+    `<link rel="preload" href="${prefix}assets/fonts/Futura100-Bold.otf" as="font" type="font/otf" crossorigin>`,
+    `<link rel="stylesheet" href="${prefix}${ver('css/styles.css')}">`,
+    ...css.map(c => `<link rel="stylesheet" href="${prefix}${ver(c)}">`),
+    ...jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`),
+    '<script>document.documentElement.classList.add("js");</script>',
+    `<script src="${prefix}${ver('js/main.js')}" defer></script>`,
+  ];
+  return lines.filter(Boolean).join('\n  ');
+}
+
+// `current` is the page you're on; `within` marks the section a sub-page
+// (a project, the Athletics wall) belongs to
+function navHtml(prefix, current, within) {
+  const links = NAV.map(n =>
+    `        <a href="${prefix}${n.href}"${n.key === current ? ' aria-current="page"' : n.key === within ? ' class="is-section"' : ''}>${n.label}</a>`
+  ).join('\n');
+  return `<a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="${prefix}index.html" aria-label="David Noh — home"${current === 'home' ? ' aria-current="page"' : ''}>
+        <img class="brand-logo" src="${prefix}${encodeURI(SITE.logo)}" alt="" data-sizes="32px" />
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="sr-only">Menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+${links}
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>`;
+}
+
+// contact block + footer — identical on every page
+function footerHtml(prefix) {
+  return `<section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title" class="contact-title">Contact</h2>
+      <ul class="contact-links">
+        <li><a href="mailto:${SITE.email}">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" /></svg>
+          <span>${SITE.email}</span>
+        </a></li>
+        <li><a href="${SITE.instagram.url}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" /></svg>
+          <span>${SITE.instagram.handle}</span><span class="sr-only"> on Instagram (opens in a new tab)</span>
+        </a></li>
+        <li><a href="${SITE.youtube.url}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" /></svg>
+          <span>youtube.com/${SITE.youtube.handle}</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+        <li><a href="${SITE.linkedin.url}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><path d="M8.5 10.5v5M8.5 8v.01M12 15.5v-5M12 13c0-1.5 1-2.5 2.2-2.5s1.8.8 1.8 2.3v2.7" /></svg>
+          <span>linkedin.com/in/${SITE.linkedin.handle}</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; ${YEAR} David Noh</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="${prefix}privacy/index.html">Privacy</a>
+        <a href="${prefix}privacy/index.html#accessibility">Accessibility</a>
+        <a href="#top">Back to top</a>
+      </nav>
+    </div>
+  </footer>`;
+}
+
+// a complete generated page
+function layout({ file, url, title, description, bodyClass = '', css = [], main, image, type, jsonld, noindex, within }) {
+  const prefix = prefixFor(file);
+  return `<!doctype html>
+<html lang="en">
+<head>
+  ${GEN_MARK}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>${esc(title)}</title>
+  ${description ? `<meta name="description" content="${esc(description)}" />` : ''}
+  ${sharedHead({ prefix, url, title, description, image, type, css, jsonld, noindex })}
+</head>
+<body class="${bodyClass}">
+  ${navHtml(prefix, '', within)}
+${main}
+  ${footerHtml(prefix)}
+</body>
+</html>
+`;
+}
+
+function redirectPage(to, title) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  ${GEN_MARK}
+  <meta charset="utf-8" />
+  <title>${esc(title)}</title>
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url=${to}" />
+  <link rel="canonical" href="${to}" />
+</head>
+<body>
+  <p>This page has moved. <a href="${to}">Continue</a>.</p>
+</body>
+</html>
+`;
+}
+
+function personLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.name,
+    url: SITE.url + '/',
+    jobTitle: SITE.role,
+    description: SITE.tagline,
+    affiliation: { '@type': 'CollegeOrUniversity', name: 'NYU Tandon School of Engineering' },
+    sameAs: [SITE.instagram.url, SITE.youtube.url, SITE.linkedin.url],
+  };
+}
+
+// write a page, adding responsive-image attributes on the way out
+function writePage(file, html) {
+  const abs = path.join(ROOT, file);
+  const page = PAGES.find(p => p.file === file);
+  const out = images.enhanceHtml(html, prefixFor(page || file));
+  fs.mkdirSync(path.dirname(abs), { recursive: true });
+  if (!fs.existsSync(abs) || fs.readFileSync(abs, 'utf8') !== out) fs.writeFileSync(abs, out, 'utf8');
+}
+
+// replace what sits between <!-- NAME:START --> and <!-- NAME:END -->
+function setRegion(html, name, content, file, required) {
+  const startTag = `<!-- ${name}:START -->`;
+  const endTag   = `<!-- ${name}:END -->`;
+  const s = html.indexOf(startTag);
+  const e = html.indexOf(endTag);
+  if (s === -1 || e === -1 || e < s) {
+    if (required) warn(`${file} is missing the ${startTag} … ${endTag} markers.`);
+    return html;
+  }
+  const lineStart = html.lastIndexOf('\n', s) + 1;
+  const indent = html.slice(lineStart, s).match(/^\s*/)[0];
+  return html.slice(0, s + startTag.length) + '\n' + indent + content + '\n' + indent + html.slice(e);
+}
+
+function writeSitemap(entries) {
+  const seen = new Set();
+  const rows = entries.filter(e => !seen.has(e.url) && seen.add(e.url)).map(e => {
+    const lastmod = /^\d{4}-\d{2}-\d{2}$/.test(e.date || '') ? `<lastmod>${e.date}</lastmod>` : '';
+    return `  <url><loc>${esc(absUrl(e.url))}</loc>${lastmod}</url>`;
+  });
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${rows.join('\n')}
+</urlset>
+`;
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml, 'utf8');
+  console.log(`sitemap.xml   (${rows.length} URLs)`);
+}
+
+/* ── project cards + filters ─────────────────────────────────────── */
+
+// up to 3 projects for the home page: anything marked `featured: true`,
+// topped up with the newest films
+function pickFeatured(projects) {
+  const films = projects.filter(p => p.section === 'films');
+  const flagged = projects.filter(p => p.featured);
+  const rest = films.filter(p => !p.featured);
+  return flagged.concat(rest).slice(0, 3);
+}
+
+function cardsHtml(items, prefix, section) {
+  if (!items.length) {
+    const e = EMPTY_STATE[section];
+    if (!e) return '';
+    const films = section === 'films' ? '' :
+      ` <a href="${prefix}Video/index.html">watch the films</a> or <a href="#contact">get in touch</a>.`;
+    return `<div class="empty-state">
+            <h2 class="empty-title">${esc(e.title)}</h2>
+            <p class="empty-body">${films.trim() ? `<a href="${prefix}Video/index.html">Watch the films</a> in the meantime.` : ''}</p>
+          </div>`;
+  }
+  const sizes = '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw';
+  return items.map((p, i) => {
+    const num = String(i + 1).padStart(2, '0');
+    const img = p.cover
+      ? `<img src="${esc(imgSrc(p.cover, 'w960', prefix))}" alt="" loading="lazy" decoding="async" data-sizes="${sizes}" />`
+      : '';
+    return `<a class="work-card reveal" href="${prefix}projects/${p.slug}.html" data-category="${esc(slugify(p.category))}">
+            <span class="work-media${p.type === 'video' ? ' is-video' : ''}">${img}</span>
+            <span class="work-num">${num}</span>
+            <span class="work-title">${esc(p.title)}</span>
+          </a>`;
+  }).join('\n          ');
+}
+
+// filter chips for a section — only shown when there's something to filter
+function filtersHtml(items) {
+  const counts = new Map();
+  for (const p of items) if (p.category) counts.set(p.category, (counts.get(p.category) || 0) + 1);
+  if (counts.size < 2) return '';
+  const chips = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([name, n]) => `<button class="chip" type="button" data-filter="${esc(slugify(name))}" aria-pressed="false">${esc(name)} <span class="chip-count">${n}</span></button>`)
+    .join('\n            ');
+  return `<div class="filters" role="group" aria-label="Filter films by type">
+            <button class="chip" type="button" data-filter="all" aria-pressed="true">All <span class="chip-count">${items.length}</span></button>
+            ${chips}
+          </div>`;
 }
 
 /* ── NYU Athletics: a standalone Instagram-wall page ─────────────────
- * One Markdown file (content/nyu-athletics.md) → one page (Athletics/
- * index.html) with its own look. Add Instagram links under `posts:` and
- * re-run; the page is fully regenerated each build.
+ * One Markdown file (content/nyu-athletics.md) → Athletics/index.html.
+ * Add Instagram links under `posts:`, run tools/fetch-ig-covers.js, rebuild.
  */
 function buildAthletics() {
-  if (!fs.existsSync(ATHLETICS_SRC)) return;
+  if (!fs.existsSync(ATHLETICS_SRC)) return false;
 
-  const { data } = splitFrontmatter(fs.readFileSync(ATHLETICS_SRC, 'utf8'));
+  const { data, body } = splitFrontmatter(fs.readFileSync(ATHLETICS_SRC, 'utf8'));
   const title    = data.title || 'NYU Athletics';
   const subtitle = data.subtitle || '';
-  const rawPosts = (Array.isArray(data.posts) ? data.posts : [])
-    .map(u => String(u).trim())
-    .filter(Boolean);
+  const rawPosts = (Array.isArray(data.posts) ? data.posts : []).map(u => String(u).trim()).filter(Boolean);
 
-  // resolve each link to { permalink, cover } — cover is a locally-saved
-  // frame (see tools/fetch-ig-covers.js) so the wall shows plain images with
-  // none of Instagram's embed chrome. Links that aren't IG posts are dropped.
+  // each link → { permalink, cover } — cover is a locally-saved frame (see
+  // tools/fetch-ig-covers.js) so the wall shows plain images with none of
+  // Instagram's embed chrome or tracking. Non-Instagram links are dropped.
   const items = [];
   let missing = 0;
   for (const url of rawPosts) {
     const info = igInfo(url);
     if (!info) continue;
-    const coverFile = path.join(ATHLETICS_COVERS, `${info.code}.jpg`);
-    const cover = fs.existsSync(coverFile) ? `../assets/img/nyu-athletics/${info.code}.jpg` : '';
+    const rel = `${ATHLETICS_COVERS}/${info.code}.jpg`;
+    const cover = fs.existsSync(path.join(ROOT, rel)) ? rel : '';
     if (!cover) missing++;
-    items.push({ permalink: info.permalink, cover });
+    items.push({ permalink: info.permalink, cover, kind: info.type === 'p' ? 'post' : 'reel' });
   }
   const dropped = rawPosts.length - items.length;
-  if (dropped > 0) console.warn(`! nyu-athletics.md: ignored ${dropped} link(s) that aren't Instagram post/reel URLs.`);
-  if (missing > 0) console.warn(`! nyu-athletics: ${missing} post(s) have no local cover — run tools/fetch-ig-covers.js (or drop a JPG in assets/img/nyu-athletics/).`);
+  if (dropped > 0) warn(`nyu-athletics.md: ignored ${dropped} link(s) that aren't Instagram post/reel URLs.`);
+  if (missing > 0) warn(`nyu-athletics: ${missing} post(s) have no local cover — run tools/fetch-ig-covers.js (or drop a JPG in ${ATHLETICS_COVERS}/).`);
 
   const [pinned, ...rest] = items;
-
-  // full-viewport hero built around the pinned reel; scroll cue leads to the wall
-  const hero = pinned ? `
-    <section class="ath-hero"${pinned.cover ? ` style="--ath-hero-img:url('${esc(pinned.cover)}')"` : ''}>
-      <a class="ath-hero-media${pinned.cover ? '' : ' ath-no-cover'}" href="${esc(pinned.permalink)}" target="_blank" rel="noopener" aria-label="Play the pinned reel on Instagram">
-        <span class="ath-play" aria-hidden="true"></span>
-      </a>
-      <div class="ath-hero-copy">
+  const newTab = '<span class="sr-only"> (opens Instagram in a new tab)</span>';
+  const copy = `<div class="ath-hero-copy">
         <h1 class="ath-title">${esc(title)}</h1>
         ${subtitle ? `<p class="ath-sub">${esc(subtitle)}</p>` : ''}
         <a class="ath-back" href="../Video/index.html">&larr; Back to Films</a>
-      </div>
-      <a class="ath-scroll" href="#wall" aria-label="Scroll to more">More work<span aria-hidden="true"></span></a>
+      </div>`;
+
+  const backdrop = pinned && pinned.cover ? images.pick(pinned.cover, 480) || pinned.cover : '';
+  const hero = pinned ? `
+    <section class="ath-hero"${backdrop ? ` style="--ath-hero-img:url('../${esc(encodeURI(backdrop))}')"` : ''}>
+      ${copy}
+      <a class="ath-hero-media${pinned.cover ? '' : ' ath-no-cover'}" href="${esc(pinned.permalink)}" target="_blank" rel="noopener noreferrer">
+        ${pinned.cover ? `<img src="../${esc(encodeURI(pinned.cover))}" alt="" fetchpriority="high" decoding="async" data-sizes="(min-width: 861px) 34vw, 90vw" />` : ''}
+        <span class="ath-play" aria-hidden="true"></span>
+        <span class="sr-only">Watch the pinned ${pinned.kind}${newTab}</span>
+      </a>
+      ${rest.length ? '<a class="ath-scroll" href="#wall">More work<span aria-hidden="true"></span></a>' : ''}
     </section>` : `
     <section class="ath-hero ath-hero--empty">
-      <div class="ath-hero-copy">
-        <h1 class="ath-title">${esc(title)}</h1>
-        ${subtitle ? `<p class="ath-sub">${esc(subtitle)}</p>` : ''}
-        <a class="ath-back" href="../Video/index.html">&larr; Back to Films</a>
-      </div>
+      ${copy}
     </section>`;
 
-  const tiles = rest.map(it => `        <a class="ath-tile${it.cover ? '' : ' ath-no-cover'}" href="${esc(it.permalink)}" target="_blank" rel="noopener" aria-label="Watch on Instagram">
-${it.cover ? `          <img src="${esc(it.cover)}" alt="" loading="lazy" decoding="async" />\n` : ''}          <span class="ath-play" aria-hidden="true"></span>
-        </a>`).join('\n');
+  const tiles = rest.map((it, i) => `        <li><a class="ath-tile reveal${it.cover ? '' : ' ath-no-cover'}" href="${esc(it.permalink)}" target="_blank" rel="noopener noreferrer">
+          ${it.cover ? `<img src="../${esc(encodeURI(it.cover))}" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1240px) 290px, (min-width: 521px) 33vw, 50vw" />` : ''}
+          <span class="ath-play" aria-hidden="true"></span>
+          <span class="sr-only">Watch ${it.kind} ${i + 2} of ${items.length}${newTab}</span>
+        </a></li>`).join('\n');
 
   const wall = rest.length ? `
-    <section class="ath-wall" id="wall">
-      <div class="ath-grid">
+    <section class="ath-wall" id="wall" aria-label="More NYU Athletics work">
+      <ul class="ath-grid">
 ${tiles}
-      </div>
+      </ul>
     </section>` : '';
 
-  const html = `<!doctype html>
-<html lang="en">
-<head>
-  ${GEN_MARK}
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
-  <title>${esc(title)} — David Noh</title>
-  <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
-  <link rel="icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/athletics.css" />
-</head>
-<body class="athletics">
-${navHtml()}
-  <main class="athletics-page">
-${hero}
-${wall}
-${contactHtml()}
-  </main>
-  <script src="../js/main.js"></script>
-</body>
-</html>
-`;
-
-  fs.mkdirSync(path.dirname(ATHLETICS_OUT), { recursive: true });
-  fs.writeFileSync(ATHLETICS_OUT, html, 'utf8');
-  console.log(`page   Athletics/index.html   (nyu athletics wall · ${items.length} post${items.length === 1 ? '' : 's'})`);
+  const description = plain(body).slice(0, 180) || `${title} — social video work by David Noh.`;
+  writePage(ATHLETICS_OUT, layout({
+    file: ATHLETICS_OUT, url: '/Athletics/', title: `${title} — David Noh`, description,
+    bodyClass: 'athletics', css: ['css/athletics.css'], image: pinned && pinned.cover, within: 'films',
+    main: `  <main id="main" class="athletics-page">${hero}${wall}
+  </main>`,
+  }));
+  console.log(`page   ${ATHLETICS_OUT}   (nyu athletics wall · ${items.length} post${items.length === 1 ? '' : 's'})`);
+  return true;
 }
 
-// pull the shortcode out of an Instagram post/reel URL and return a clean
-// canonical permalink (tracking params stripped)
+// shortcode + clean canonical permalink (tracking params stripped)
 function igInfo(url) {
   const m = String(url).match(/instagram\.com\/(reel|reels|p|tv)\/([\w-]+)/i);
   if (!m) return null;
   const type = m[1].toLowerCase() === 'reels' ? 'reel' : m[1].toLowerCase();
-  return { code: m[2], permalink: `https://www.instagram.com/${type}/${m[2]}/` };
+  return { code: m[2], type, permalink: `https://www.instagram.com/${type}/${m[2]}/` };
+}
+
+/* ── privacy page — written from what the site actually does ───────── */
+
+function buildPrivacy(projects) {
+  const used = new Set();
+  const thumbHosts = new Set();
+  for (const p of projects) {
+    if (p.type === 'video') {
+      const v = videoEmbed(p);
+      if (PROVIDERS[v.provider] && v.provider !== 'other') used.add(v.provider);
+    }
+    for (const src of [p.cover, ...p.gallery.map(g => g.src), ...p.subphotos.map(s => s.src)]) {
+      if (/img\.youtube\.com/.test(src)) thumbHosts.add('YouTube');
+      else if (driveId(src || '')) thumbHosts.add('Google Drive');
+    }
+  }
+  const names = [...used].map(k => PROVIDERS[k].name);
+  const list = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  const policies = [...new Map([...used].map(k => [PROVIDERS[k].policy, PROVIDERS[k]])).values()]
+    .map(p => `<a href="${p.policy}" target="_blank" rel="noopener noreferrer">${p.name === 'Google Drive' || p.name === 'YouTube' ? 'Google' : p.name}</a>`);
+
+  const fontsPara = fontsLocal
+    ? `<p>Fonts, styles and scripts are served from this site itself. Nothing is loaded from an advertising or analytics network.</p>`
+    : `<p>The text typeface (Space Grotesk) is delivered by Google Fonts, so your browser contacts Google&rsquo;s servers to download it when a page loads. Google receives your IP address as part of that request. See <a href="https://developers.google.com/fonts/faq/privacy" target="_blank" rel="noopener noreferrer">Google Fonts&rsquo; privacy notes</a>.</p>`;
+  const thumbsPara = thumbHosts.size
+    ? `<p>A few video thumbnails are loaded directly from ${list([...thumbHosts])}, which means your browser requests those images from that service when the page loads.</p>`
+    : '';
+
+  const main = `  <main id="main" class="about-page legal-page">
+    <section class="about-hero">
+      <div class="container">
+        <p class="label">Privacy &amp; accessibility</p>
+        <h1>Privacy<span>.</span></h1>
+        <p class="about-lead">The short version: this site doesn&rsquo;t track you, set cookies, or collect anything about you.</p>
+      </div>
+    </section>
+
+    <section class="about-bio">
+      <div class="container">
+        <p class="about-section-label">Privacy</p>
+        <div class="about-prose">
+          <h2>Who runs this site</h2>
+          <p>davidnoh.com is the personal portfolio of David Noh. For anything on this page, write to <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>
+
+          <h2>What this site collects</h2>
+          <p>Nothing. There are no accounts, forms, analytics, advertising pixels or cookies set by this site, and nothing is sold or shared, because nothing is gathered.</p>
+
+          <h2>Hosting</h2>
+          <p>The site is hosted on GitHub Pages. Like any web host, GitHub receives your IP address and basic request details in order to deliver the pages, and may keep them in server logs for security. That processing is described in the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a>.</p>
+          ${fontsPara}
+          ${thumbsPara}
+
+          <h2 id="embeds">Embedded video</h2>
+          <p>${names.length ? `Films on this site are hosted on ${list(names)}.` : 'Some films are hosted on outside video platforms.'} Their players are <strong>not</strong> loaded when you open a page. You see a still frame, and the player is only requested once you press play. From that moment the platform can set cookies and collect data under its own policy${policies.length ? ` (${list(policies)})` : ''}. YouTube videos use YouTube&rsquo;s privacy-enhanced mode.</p>
+          <p>Links to Instagram, YouTube and other sites open those services directly, and their policies apply once you are there.</p>
+
+          <h2>Email</h2>
+          <p>If you email me, I use your address and message only to reply to you.</p>
+
+          <h2>Your rights</h2>
+          <p>Depending on where you live (for example under the GDPR or the CCPA) you may have the right to ask what personal data is held about you and to have it corrected or deleted. This site holds none, but you are welcome to ask, and I will answer.</p>
+
+          <h2>Children</h2>
+          <p>This site is not directed at children under 13 and does not knowingly collect information from anyone.</p>
+
+          <h2>Credits &amp; copyright</h2>
+          <p>Films, photographs and writing here are &copy; David Noh unless a page credits someone else. Names and logos of organizations (such as National History Day, the Scholastic Art &amp; Writing Awards and NYU) belong to their owners and appear only to identify the work or recognition they relate to. If you appear in something here and would like it changed or removed, email me and I will take care of it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-bio" id="accessibility">
+      <div class="container">
+        <p class="about-section-label">Accessibility</p>
+        <div class="about-prose">
+          <h2>What I aim for</h2>
+          <p>I want this site to work for everyone, and build it against the Web Content Accessibility Guidelines (WCAG) 2.1, level AA: it can be used by keyboard alone, respects your reduced-motion setting, keeps text contrast readable, and nothing plays or moves on its own.</p>
+          <h2>Known gaps</h2>
+          <p>Some of the films are hosted on outside platforms and don&rsquo;t yet have captions or transcripts. If you need one, or run into any other barrier, email <a href="mailto:${SITE.email}">${SITE.email}</a> and I will get you the content in a form that works.</p>
+          <p class="legal-updated">Last updated November 14, 2026.</p>
+        </div>
+      </div>
+    </section>
+  </main>`;
+
+  writePage('privacy/index.html', layout({
+    file: 'privacy/index.html', url: '/privacy/', title: 'Privacy & Accessibility — David Noh',
+    description: 'How davidnoh.com handles privacy (no tracking, no cookies, click-to-load video) and its accessibility commitment.',
+    bodyClass: 'about', main,
+  }));
+  console.log('page   privacy/index.html');
 }
 
 /* ── parsing ─────────────────────────────────────────────────────── */
@@ -213,76 +655,70 @@ function igInfo(url) {
 function parseProject(file) {
   const raw = fs.readFileSync(file, 'utf8');
   const { data, body } = splitFrontmatter(raw);
+  const base = path.basename(file);
   const slug = slugify(path.basename(file, '.md'));
   const section = normalizeSection(data.section);
 
-  if (!SECTION_INDEX[section]) {
-    console.warn(`! ${path.basename(file)}: unknown section "${data.section}" (use photos | films | xr).`);
-  }
-  const video = String(data.video || '').trim();
-  const base = path.basename(file);
+  if (!SECTION_INDEX[section]) warn(`${base}: unknown section "${data.section}" (use photos | films | xr).`);
+  if (data.date && !/^\d{4}(-\d{2}){0,2}$/.test(String(data.date))) warn(`${base}: date "${data.date}" should look like YYYY-MM-DD.`);
 
+  const video = String(data.video || '').trim();
   const proj = {
+    file: base,
     slug,
     section,
-    type:     video ? 'video' : 'photo',
-    title:    data.title || 'Untitled',
-    subtitle: data.subtitle || '',
-    date:     data.date || '',
-    order:    data.order || '',
-    cover:    data.cover || '',
-    subphotos: normalizeSubphotos(data.subphoto),
-    gallery:  Array.isArray(data.gallery) ? data.gallery : [],
+    type:      video ? 'video' : 'photo',
+    title:     data.title || 'Untitled',
+    subtitle:  data.subtitle || '',
+    date:      String(data.date || ''),
+    order:     data.order || '',
+    category:  data.category || '',
+    aspect:    data.aspect || '',
+    featured:  /^(true|yes|1)$/i.test(String(data.featured || '')),
+    cover:     norm(data.cover || ''),
+    subphotos: captioned(data.subphoto),
+    gallery:   captioned(data.gallery),
     video,
-    bodyHtml: mdBody(body),
+    body,
+    bodyHtml:  mdBody(body),
   };
+
+  // a locally-saved thumbnail (tools/localize-assets.js) beats a remote one
+  const auto = `${AUTO_COVERS}/${slug}.jpg`;
+  if ((!proj.cover || isRemote(proj.cover)) && fs.existsSync(path.join(ROOT, auto))) proj.cover = auto;
 
   // no cover given on a video project — fall back to the video's own thumbnail
   if (!proj.cover && video) {
     proj.cover = videoThumbnail(video);
-    if (!proj.cover) {
-      console.warn(`! ${base}: no cover set and no auto-thumbnail available for this video link — set \`cover\` manually.`);
-    }
+    if (!proj.cover) warn(`${base}: no cover set and no auto-thumbnail available for this video link — set \`cover\` manually.`);
   }
 
   // drop image paths whose files don't exist (e.g. leftover template placeholders)
-  if (assetMissing(proj.cover))    { console.warn(`! ${base}: cover image not found — ${proj.cover}`); proj.cover = ''; }
-  proj.subphotos = proj.subphotos.filter(s => {
-    if (assetMissing(s.src)) { console.warn(`! ${base}: subphoto not found — ${s.src}`); return false; }
-    return true;
-  });
-  proj.gallery = proj.gallery.filter(g => {
-    if (assetMissing(g)) { console.warn(`! ${base}: gallery image not found — ${g}`); return false; }
-    return true;
-  });
+  if (assetMissing(proj.cover)) { warn(`${base}: cover image not found — ${proj.cover}`); proj.cover = ''; }
+  proj.subphotos = proj.subphotos.filter(s => assetMissing(s.src) ? (warn(`${base}: subphoto not found — ${s.src}`), false) : true);
+  proj.gallery   = proj.gallery.filter(g => assetMissing(g.src) ? (warn(`${base}: gallery image not found — ${g.src}`), false) : true);
 
   return proj;
 }
 
-// `subphoto` accepts either one plain image path (legacy) or a list of
-// entries, each optionally carrying a caption after a pipe:
-//   subphoto:
-//     - assets/img/projects/foo/storyboard.jpg | Early storyboard mapping out the shot flow.
-function normalizeSubphotos(raw) {
+// `subphoto` and `gallery` accept one path or a list; each entry may carry a
+// caption after a pipe:   - assets/img/foo/storyboard.jpg | Early storyboard.
+function captioned(raw) {
   if (!raw) return [];
   const entries = Array.isArray(raw) ? raw : [raw];
   return entries.filter(Boolean).map(entry => {
     const [src, ...rest] = String(entry).split('|');
-    return { src: src.trim(), caption: rest.join('|').trim() };
+    return { src: norm(src.trim()), caption: rest.join('|').trim() };
   });
 }
 
-// true if a local image path points at a file that isn't there (URLs pass)
-function assetMissing(p) {
-  if (!p || /^https?:\/\//i.test(p)) return false;
-  // normalize Windows-style backslashes so paths authored on Windows still
-  // resolve on case-sensitive / POSIX filesystems (macOS, GitHub Pages)
-  const clean = String(p).replace(/\\/g, '/').replace(/^\.?\/+/, '');
-  return !fs.existsSync(path.join(ROOT, clean));
-}
+// Windows-style backslashes aren't valid URL separators — normalize them
+function norm(p) { return isRemote(p) ? p : String(p).replace(/\\/g, '/').replace(/^\.?\/+/, ''); }
+function isRemote(p) { return /^https?:\/\//i.test(p || ''); }
+function assetMissing(p) { return !!p && !isRemote(p) && !fs.existsSync(path.join(ROOT, p)); }
 
 function splitFrontmatter(raw) {
-  const m = raw.match(/^﻿?---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+  const m = raw.replace(/\r\n/g, '\n').match(/^\uFEFF?---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
   if (!m) return { data: {}, body: raw.trim() };
   return { data: parseYaml(m[1]), body: m[2].trim() };
 }
@@ -305,7 +741,6 @@ function parseYaml(text) {
       else            { data[key] = val; listKey = null; }
     }
   }
-  // a `key:` with no list items underneath is just an empty value
   for (const k of Object.keys(data)) {
     if (Array.isArray(data[k]) && data[k].length === 0) data[k] = '';
   }
@@ -324,248 +759,234 @@ function mdBody(md) {
   };
   for (const raw of md.split('\n')) {
     const line = raw.trim();
-    if (!line) { flush(); continue; }                       // blank line = paragraph break
-    const h = line.match(/^(#{1,3})\s+(.*)$/);              // a heading on its own line
+    if (!line) { flush(); continue; }
+    const h = line.match(/^(#{1,3})\s+(.*)$/);
     if (h) { flush(); const lvl = h[1].length + 1; out.push(`<h${lvl}>${mdInline(h[2])}</h${lvl}>`); continue; }
     para.push(line);
   }
   flush();
-  return out.join('\n        ');
+  return out.join('\n          ');
 }
 
 function mdInline(s) {
   return esc(s)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+    .replace(/\[(.+?)\]\((.+?)\)/g, (_, text, href) =>
+      /^https?:/i.test(href)
+        ? `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`
+        : `<a href="${href}">${text}</a>`);
 }
 
-/* ── page template ───────────────────────────────────────────────── */
+// plain text of a markdown body, for meta descriptions
+function plain(md) {
+  return String(md || '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/^#{1,3}\s+/gm, '')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/[*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function truncate(s, n) {
+  if (s.length <= n) return s;
+  const cut = s.slice(0, n - 1);
+  return cut.slice(0, Math.max(cut.lastIndexOf(' '), n - 30)).replace(/[\s,;:—-]+$/, '') + '…';
+}
 
-// full-bleed cover image with the eyebrow/title/subtitle overlaid
-function heroSection(p, eyebrow) {
-  return `
-    <section class="project-hero">
-      ${p.cover ? `<img class="project-cover" src="${esc(imgSrc(p.cover, 'w1600'))}" alt="${esc(p.title)}" fetchpriority="high" decoding="async" />` : ''}
-      <div class="project-hero-inner project-wrap">
-        <p class="project-eyebrow">${esc(eyebrow)}</p>
+/* ── project page ────────────────────────────────────────────────── */
+
+function renderProject(p, newer, older) {
+  const backHref  = '../' + (SECTION_INDEX[p.section] || 'index.html');
+  const backLabel = SECTION_LABEL[p.section] || 'Portfolio';
+  const when = prettyDate(p.date);
+  const description = truncate([p.subtitle, plain(p.body)].filter(Boolean).join('. ').replace(/\.\./g, '.'), 170)
+    || `${p.title} — a project by David Noh.`;
+
+  const eyebrow = [backLabel, when].filter(Boolean).join('  ·  ');
+  const heading = `<p class="project-eyebrow">${esc(eyebrow)}</p>
         <h1 class="project-title">${esc(p.title)}</h1>
-        ${p.subtitle ? `<p class="project-subtitle">${esc(p.subtitle)}</p>` : ''}
+        ${p.subtitle ? `<p class="project-subtitle">${esc(p.subtitle)}</p>` : ''}`;
+  const hero = p.cover ? `
+    <header class="project-hero">
+      <img class="project-cover" src="${esc(imgSrc(p.cover, 'w1600'))}" alt="" fetchpriority="high" decoding="async" />
+      <div class="project-hero-inner project-wrap">
+        ${heading}
+      </div>
+    </header>` : `
+    <header class="project-head">
+      <div class="project-wrap">
+        ${heading}
+      </div>
+    </header>`;
+
+  const text = p.bodyHtml ? `
+    <section class="project-intro">
+      <div class="project-wrap">
+        <div class="project-text">
+          ${p.bodyHtml}
+        </div>
+      </div>
+    </section>` : '';
+
+  let top;
+  const jsonld = [];
+  if (p.type === 'video') {
+    const v = videoEmbed(p);
+    top = `${hero}
+    <section class="project-stage" aria-label="Watch ${esc(p.title)}">
+      <div class="project-wrap project-wrap--wide">
+        ${v.html}
       </div>
     </section>`;
-}
 
-// one plain subphoto with no caption keeps the old full-bleed feature look;
-// a caption or multiple entries switches to a captioned "process" section
-// (storyboards, drafts, on-set shots — described like a behind-the-scenes page)
-function subphotoSection(p) {
-  if (!p.subphotos.length) return '';
-  const descriptive = p.subphotos.length > 1 || p.subphotos.some(s => s.caption);
-  if (!descriptive) {
-    return `
-    <section class="project-feature">
-      <div class="project-wrap"><img src="${esc(imgSrc(p.subphotos[0].src, 'w1600'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></div>
-    </section>`;
+    if (v.provider === 'youtube' && /^\d{4}-\d{2}-\d{2}$/.test(p.date)) {
+      jsonld.push({
+        '@context': 'https://schema.org', '@type': 'VideoObject',
+        name: p.title, description, uploadDate: p.date,
+        thumbnailUrl: `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`,
+        embedUrl: `https://www.youtube.com/embed/${v.id}`,
+        contentUrl: v.watch,
+        creator: { '@type': 'Person', name: SITE.name, url: SITE.url + '/' },
+      });
+    }
+  } else {
+    top = hero;
   }
-  return `
-    <section class="project-process">
+
+  // one plain subphoto keeps the full-width feature look; a caption or
+  // several entries become a captioned "Behind the Scenes" section
+  let process = '';
+  if (p.subphotos.length) {
+    const descriptive = p.subphotos.length > 1 || p.subphotos.some(s => s.caption);
+    const shotSizes = '(min-width: 1010px) 960px, 100vw';
+    process = !descriptive ? `
+    <section class="project-feature">
+      <div class="project-wrap"><img src="${esc(imgSrc(p.subphotos[0].src, 'w1600'))}" alt="${esc(`${p.title} — still`)}" loading="lazy" decoding="async" data-zoom data-sizes="${shotSizes}" /></div>
+    </section>` : `
+    <section class="project-process" aria-labelledby="process-title">
       <div class="project-wrap">
-        <h2 class="project-process-title">Behind the Scenes</h2>
-        ${p.subphotos.map(s => `<figure class="process-shot">
-          <img src="${esc(imgSrc(s.src, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" />${s.caption ? `\n          <figcaption>${mdInline(s.caption)}</figcaption>` : ''}
+        <h2 class="project-process-title" id="process-title">Behind the Scenes</h2>
+        ${p.subphotos.map((s, i) => `<figure class="process-shot">
+          <img src="${esc(imgSrc(s.src, 'w1200'))}" alt="${esc(s.caption ? `Behind the scenes ${i + 1}` : `${p.title} — behind the scenes ${i + 1}`)}" loading="lazy" decoding="async" data-zoom data-sizes="${shotSizes}" />${s.caption ? `\n          <figcaption>${mdInline(s.caption)}</figcaption>` : ''}
         </figure>`).join('\n        ')}
       </div>
     </section>`;
-}
-
-function renderPage(p) {
-  const backHref  = '../' + SECTION_INDEX[p.section];
-  const backLabel = SECTION_LABEL[p.section] || 'Portfolio';
-  const eyebrow   = [backLabel, p.date].filter(Boolean).join('  ·  ');
-
-  const head = `<!doctype html>
-<html lang="en">
-<head>
-  ${GEN_MARK}
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
-  <title>${esc(p.title)} — David Noh</title>
-  <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
-  <link rel="icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/project.css" />
-</head>`;
-
-  const text = p.bodyHtml
-    ? `\n        <div class="project-text">\n        ${p.bodyHtml}\n        </div>`
-    : '';
-
-  let main;
-  let igScript = false;
-  if (p.type === 'video') {
-    const v = videoEmbed(p.video);
-    igScript = v.provider === 'instagram';
-    const stage = v.provider === 'instagram'
-      ? `
-    <section class="project-stage project-stage--ig">
-      <div class="project-wrap"><div class="ig-embed">${v.html}</div></div>
-    </section>`
-      : `
-    <section class="project-stage">
-      <div class="project-wrap"><div class="video-frame">${v.html}</div></div>
-    </section>`;
-    // use the cover as a full-bleed hero (title overlaid) when one exists;
-    // otherwise fall back to a plain text title block above the video
-    const header = p.cover ? heroSection(p, eyebrow) : `
-    <section class="project-head">
-      <div class="project-wrap">
-        <p class="project-eyebrow">${esc(eyebrow)}</p>
-        <h1 class="project-title">${esc(p.title)}</h1>
-        ${p.subtitle ? `<p class="project-subtitle">${esc(p.subtitle)}</p>` : ''}
-      </div>
-    </section>`;
-    const desc = text ? `
-    <section class="project-intro">
-      <div class="project-wrap">${text}
-      </div>
-    </section>` : '';
-    // hero/title first, then the video, then the description
-    main = `${header}${stage}${desc}`;
-  } else {
-    main = `${heroSection(p, eyebrow)}${text ? `
-    <section class="project-intro">
-      <div class="project-wrap">${text}
-      </div>
-    </section>` : ''}`;
   }
 
-  const subphoto = subphotoSection(p);
-
   const gallery = p.gallery.length ? `
-    <section class="project-gallery">
-      <div class="project-wrap">
-        ${p.gallery.map(g =>
-          `<figure class="project-shot"><img src="${esc(imgSrc(g, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" /></figure>`
+    <section class="project-gallery" aria-label="Gallery">
+      <div class="project-wrap project-wrap--wide gallery-grid">
+        ${p.gallery.map((g, i) =>
+          `<figure class="project-shot"><img src="${esc(imgSrc(g.src, 'w1200'))}" alt="${esc(g.caption || `${p.title} — photo ${i + 1} of ${p.gallery.length}`)}" loading="lazy" decoding="async" data-zoom data-sizes="(min-width: 900px) 50vw, 100vw" />${g.caption ? `<figcaption>${mdInline(g.caption)}</figcaption>` : ''}</figure>`
         ).join('\n        ')}
       </div>
     </section>` : '';
 
-  return `${head}
-<body class="project project-${p.type}">
-${navHtml()}
-  <main class="project-page">${main}${subphoto}${gallery}
-    <div class="project-wrap">
-      <a class="project-back" href="${backHref}">&larr; Back to ${esc(backLabel)}</a>
-    </div>
-${contactHtml()}
-  </main>
-  <script src="../js/main.js"></script>${igScript ? '\n  <script async src="https://www.instagram.com/embed.js"></script>' : ''}
-</body>
-</html>
-`;
-}
-
-function contactHtml() {
-  return `    <section id="contact" class="contact" aria-label="Contact">
-      <div class="container">
-        <h2>Contact</h2>
-        <div class="contact-links">
-          <a class="contact-link" href="mailto:Daviddwnoh@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" />
-            </svg>
-            <span>Daviddwnoh@gmail.com</span>
-          </a>
-          <a class="contact-link" href="https://instagram.com/davidnfilms" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" />
-            </svg>
-            <span>@davidnfilms</span>
-          </a>
-          <a class="contact-link" href="https://www.youtube.com/@Davidnfilms25" aria-label="YouTube" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" />
-            </svg>
-            <span>youtube.com/@Davidnfilms25</span>
-          </a>
-        </div>
+  const pagerLink = (q, dir, label) => q
+    ? `<a class="pager-link pager-${dir}" href="${q.slug}.html" rel="${dir}"><span class="pager-label">${label}</span><span class="pager-title">${esc(q.title)}</span></a>`
+    : `<span class="pager-link pager-${dir} is-empty"></span>`;
+  const pager = `
+    <nav class="project-pager" aria-label="More ${esc(backLabel.toLowerCase())} projects">
+      <div class="project-wrap project-wrap--wide pager-inner">
+        ${pagerLink(newer, 'prev', '&larr; Newer')}
+        <a class="pager-all" href="${backHref}">All ${esc(backLabel.toLowerCase())}${backLabel === 'Films' ? '' : ' projects'}</a>
+        ${pagerLink(older, 'next', 'Older &rarr;')}
       </div>
-    </section>`;
+    </nav>`;
+
+  return layout({
+    file: `projects/${p.slug}.html`,
+    url: `/projects/${p.slug}.html`,
+    title: `${p.title} — David Noh`,
+    description,
+    bodyClass: `project project-${p.type}`,
+    css: ['css/project.css'],
+    image: isRemote(p.cover) ? '' : p.cover,
+    type: p.type === 'video' ? 'video.other' : 'article',
+    within: p.section,
+    jsonld,
+    main: `  <main id="main" class="project-page">
+    <article>${top}${text}${process}${gallery}
+    </article>${pager}
+  </main>`,
+  });
 }
 
-function navHtml() {
-  return `  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="../index.html" aria-label="Home">
-        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="Logo" />
-      </a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-        <span class="sr-only">Toggle menu</span>☰
-      </button>
-      <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <div class="nav-item has-dropdown">
-          <a href="../index.html#projects">Portfolio</a>
-          <div class="dropdown" aria-label="Portfolio links">
-            <a href="../Video/index.html">Films</a>
-            <a href="../Photos/index.html">Photo</a>
-            <a href="../XR/underconstruction.html">XR</a>
-          </div>
-        </div>
-        <a href="../About/about.html">About</a>
-        <a href="../index.html#contact">Contact</a>
-      </nav>
-    </div>
-  </header>`;
-}
+/* ── video: click-to-load players ────────────────────────────────────
+ * Third-party players (YouTube, Drive, Vimeo, Instagram) are NOT loaded
+ * with the page. We show the cover with a play button; js/main.js swaps in
+ * the real player on click. That keeps pages fast and means no third party
+ * sets cookies or sees the visitor until they choose to press play — which
+ * is what lets the site go without a cookie banner. Without JavaScript the
+ * play button is a plain link to the video.
+ */
+function videoEmbed(p) {
+  const url = p.video;
+  const t = esc(p.title);
+  let provider = 'other', embed = url, watch = url, id = '', portrait = false;
 
-/* ── card injection into section index pages ─────────────────────── */
+  const yt    = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]+)/);
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  const gid   = driveId(url);
+  const ig    = igInfo(url);
 
-function injectCards(section, items) {
-  const indexRel = SECTION_INDEX[section];
-  if (!indexRel) return;
-  const indexPath = path.join(ROOT, indexRel);
-  if (!fs.existsSync(indexPath)) return;
-
-  let html = fs.readFileSync(indexPath, 'utf8');
-  const startTag = `<!-- PROJECTS:${section}:START -->`;
-  const endTag   = `<!-- PROJECTS:${section}:END -->`;
-  const s = html.indexOf(startTag);
-  const e = html.indexOf(endTag);
-
-  if (s === -1 || e === -1) {
-    if (items.length) {
-      console.warn(`! ${indexRel} has no ${startTag} / ${endTag} markers — ` +
-                   `skipped ${items.length} ${section} card(s). Add the markers inside a .project-grid to enable.`);
-    }
-    return;
+  if (yt) {
+    provider = 'youtube'; id = yt[1];
+    portrait = /\/shorts\//.test(url);
+    embed = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+    watch = `https://www.youtube.com/watch?v=${id}`;
+  } else if (vimeo) {
+    provider = 'vimeo';
+    embed = `https://player.vimeo.com/video/${vimeo[1]}?autoplay=1&dnt=1`;
+    watch = `https://vimeo.com/${vimeo[1]}`;
+  } else if (gid) {
+    provider = 'gdrive';
+    embed = `https://drive.google.com/file/d/${gid}/preview`;
+    watch = `https://drive.google.com/file/d/${gid}/view`;
+  } else if (ig) {
+    provider = 'instagram'; portrait = true;
+    embed = watch = ig.permalink;
+  } else if (/\.(mp4|webm|mov)$/i.test(url)) {
+    provider = 'file';
   }
 
-  // continue the sequence numbers after any hand-written cards before the marker
-  const offset = (html.slice(0, s).match(/class="project-card/g) || []).length;
+  const ar = ratio(p.aspect, portrait ? [9, 16] : [16, 9]);
+  const style = `style="--ar: ${ar[0]} / ${ar[1]}; --ar-n: ${(ar[0] / ar[1]).toFixed(4)}"`;
+  const sizes = ar[0] < ar[1] ? '(min-width: 520px) 420px, 90vw' : '(min-width: 1300px) 1200px, 100vw';
 
-  const cards = items.map((p, i) => {
-    const num = String(offset + i + 1).padStart(2, '0');
-    const img = p.cover ? `\n            <img src="${esc(imgSrc(p.cover, 'w1200'))}" alt="${esc(p.title)}" loading="lazy" decoding="async" />` : '';
-    return `          <a class="project-card" href="../projects/${p.slug}.html">${img}
-            <span class="project-num">${num}</span>
-            <span class="project-label">${esc(p.title)}</span>
-          </a>`;
-  }).join('\n');
+  if (provider === 'file') {
+    const poster = p.cover ? (isRemote(p.cover) ? p.cover : '../' + encodeURI(images.pick(p.cover, 1600) || p.cover)) : '';
+    return { provider, html: `<div class="video-frame" ${style}>
+          <video src="${esc(encodeURI(rel(url)))}" controls playsinline preload="none"${poster ? ` poster="${esc(poster)}"` : ''} aria-label="${t}"></video>
+        </div>` };
+  }
 
-  const region = cards ? `\n${cards}\n          ` : `\n          `;
-  const next = html.slice(0, s + startTag.length) + region + html.slice(e);
-  fs.writeFileSync(indexPath, next, 'utf8');
-  if (items.length) console.log(`cards  ${indexRel}   (+${items.length})`);
+  const who = PROVIDERS[provider] || PROVIDERS.other;
+  const poster = p.cover
+    ? `<img class="video-poster" src="${esc(imgSrc(p.cover, 'w1600'))}" alt="" fetchpriority="high" decoding="async" data-sizes="${sizes}" />`
+    : '';
+  const html = `<div class="video-frame" ${style} data-provider="${provider}" data-embed="${esc(embed)}" data-title="${t}">
+          ${poster}
+          <a class="video-play" href="${esc(watch)}" target="_blank" rel="noopener noreferrer">
+            <span class="play-ring" aria-hidden="true"></span>
+            <span class="video-play-label">Play<span class="sr-only"> ${t} (loads the ${esc(who.name)} player)</span></span>
+          </a>
+        </div>`;
+  return { provider, id, watch, html };
+}
+
+// "9:16", "2.39:1", "4/3" → [9, 16]
+function ratio(s, fallback) {
+  const m = String(s || '').match(/^\s*(\d+(?:\.\d+)?)\s*[:/x]\s*(\d+(?:\.\d+)?)\s*$/);
+  if (!m || !Number(m[1]) || !Number(m[2])) return fallback;
+  return [Number(m[1]), Number(m[2])];
 }
 
 /* ── helpers ─────────────────────────────────────────────────────── */
 
 function slugify(s) {
-  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 // accept the natural words people type for each section
 function normalizeSection(s) {
@@ -573,17 +994,14 @@ function normalizeSection(s) {
   const alias = {
     photo: 'photos', photos: 'photos', photography: 'photos',
     film: 'films', films: 'films', video: 'films', videos: 'films',
-    xr: 'xr',
+    xr: 'xr', ar: 'xr', vr: 'xr',
   };
   return alias[v] || v;
 }
 function stripQuotes(s) { return s.replace(/^["']|["']$/g, ''); }
-// strip an inline "# comment" (YAML-style: at the value's start or after
-// whitespace) so leftover template comments don't end up in the value
+// strip an inline "# comment" (at the value's start or after whitespace)
 function cleanVal(s) { return stripQuotes(s.replace(/(^|\s)#.*$/, '$1').trim()); }
-// full escape (including quotes) so this is always safe to drop into an
-// HTML attribute, not just text content — frontmatter values (urls, titles,
-// captions) flow straight from Markdown into src="..."/href="..." below.
+// full escape (including quotes) — safe for attributes as well as text
 function esc(s) {
   return String(s)
     .replace(/&/g, '&amp;')
@@ -592,14 +1010,27 @@ function esc(s) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
-// asset paths are written relative to the repo root; every generated/injected
-// file lives exactly one folder deep, so a single "../" resolves them all.
-function rel(p) {
+function unesc(s) {
+  return String(s)
+    .replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&middot;/g, '·')
+    .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+}
+
+// "2026-06-01" → "June 2026";  year("2026-06-01") → "2026"
+function prettyDate(d) {
+  const m = String(d || '').match(/^(\d{4})(?:-(\d{2}))?/);
+  if (!m) return '';
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  return m[2] && months[Number(m[2]) - 1] ? `${months[Number(m[2]) - 1]} ${m[1]}` : m[1];
+}
+function year(d) { return (String(d || '').match(/^(\d{4})/) || [])[1] || ''; }
+
+// asset paths are written relative to the repo root
+function rel(p, prefix = '../') {
   if (!p) return '';
-  if (/^https?:\/\//i.test(p)) return p;
-  // normalize Windows-style backslashes — they aren't valid URL separators and
-  // break on case-sensitive / strict hosts (e.g. GitHub Pages)
-  return '../' + String(p).replace(/\\/g, '/').replace(/^\.?\/+/, '');
+  if (isRemote(p)) return p;
+  return prefix + norm(p);
 }
 
 // pull the file id out of any Google Drive share/open/uc link
@@ -609,65 +1040,22 @@ function driveId(url) {
   return m ? m[1] : null;
 }
 
-// resolve an image field to a usable <img src>: Google Drive links become a
-// direct thumbnail URL, local paths get the ../ prefix, other URLs pass through.
-// (The Drive file's sharing must be "Anyone with the link" to display.)
-function imgSrc(p, size = 'w1600') {
+// an image field → a usable <img src>: Google Drive links become a direct
+// thumbnail URL, local paths get the page's prefix, other URLs pass through.
+function imgSrc(p, size = 'w1600', prefix = '../') {
   if (!p) return '';
   const id = driveId(p);
   if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=${size}`;
-  return rel(p);
+  return isRemote(p) ? p : prefix + encodeURI(norm(p));
 }
-// best-effort thumbnail for a video link, used to fill in `cover` when a
-// project doesn't set one. Only sources with a predictable, no-network
-// thumbnail URL are handled here (YouTube, Google Drive) — Vimeo, Instagram,
-// and local video files have no static thumbnail URL, so those still need a
-// manual `cover`.
+
+// best-effort thumbnail for a video link when a project sets no cover.
+// (Run tools/localize-assets.js to save these into the repo instead.)
 function videoThumbnail(url) {
   const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]+)/);
   if (yt) return `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`;
-
-  // Drive generates thumbnails for video files the same way it does for
-  // images, so the normal Drive thumbnail endpoint just works here too.
-  if (driveId(url)) return url;
-
+  if (driveId(url)) return url;   // Drive makes thumbnails for videos too
   return '';
 }
 
-// Returns { provider, html }. Works for normal AND unlisted YouTube links
-// (unlisted videos embed with the same URL), plus Vimeo, Instagram reels,
-// local video files, and any already-embeddable URL.
-function videoEmbed(url) {
-  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]+)/);
-  if (yt) return { provider: 'youtube', html: iframe(`https://www.youtube.com/embed/${yt[1]}`) };
-
-  const vimeo = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeo) return { provider: 'vimeo', html: iframe(`https://player.vimeo.com/video/${vimeo[1]}`) };
-
-  // Google Drive — turn any share/open/uc link into the /preview embed.
-  // The file's sharing must be set to "Anyone with the link" to play.
-  const gid = driveId(url);
-  if (gid) return { provider: 'gdrive', html: iframe(`https://drive.google.com/file/d/${gid}/preview`) };
-
-  // Instagram reel / post / igtv — embedded via Instagram's official embed.js,
-  // which auto-sizes the (portrait) player. We just emit the blockquote.
-  const ig = url.match(/instagram\.com\/(reel|reels|p|tv)\/([\w-]+)/i);
-  if (ig) {
-    const type = ig[1].toLowerCase() === 'reels' ? 'reel' : ig[1].toLowerCase();
-    const permalink = `https://www.instagram.com/${type}/${ig[2]}/`;
-    return {
-      provider: 'instagram',
-      html: `<blockquote class="instagram-media" data-instgrm-permalink="${esc(permalink)}" data-instgrm-version="14"></blockquote>`,
-    };
-  }
-
-  if (/\.(mp4|webm|mov)$/i.test(url)) {
-    return { provider: 'file', html: `<video src="${esc(rel(url))}" controls playsinline></video>` };
-  }
-  return { provider: 'other', html: iframe(url) }; // assume already-embeddable
-}
-function iframe(src) {
-  return `<iframe src="${esc(src)}" title="Video" loading="lazy" frameborder="0" ` +
-         `allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ` +
-         `allowfullscreen></iframe>`;
-}
+main();

@@ -1,206 +1,70 @@
-/* =========================================================
-   project.css — styling for generated project detail pages
-   (content/projects/*.md  →  projects/<slug>.html)
+/* ==========================================================================
+   project.css — generated project pages (content/projects/*.md)
+   Loaded after styles.css, so every token there is available here.
 
-   Loaded AFTER styles.css, so all design tokens (--accent,
-   --text, --bg, fonts, etc.) are available here. This layout
-   is intentionally its own thing — a calm, centered editorial
-   reading view — while staying in the site's dark palette.
-   ========================================================= */
+   Film pages: title, then the player on a dim "screening room" glow.
+   Photo pages: full-bleed cover with the title over it.
+   ========================================================================== */
 
-body.project {
-  background: var(--bg);
-}
-
-.project-page {
-  padding-bottom: 0;
-}
-
-/* Sections size to their content — override the site-wide 70vh min-height
-   so the page height tracks the description length and margins stay
-   consistent. The photo hero keeps its own min-height (set below). */
-.project-page > section:not(.project-hero) { min-height: 0; }
-
-/* Centered content column shared by every block */
 .project-wrap {
-  width: min(960px, 100% - 48px);
-  margin: 0 auto;
+  width: min(960px, 100% - (var(--pad) * 2));
+  margin-inline: auto;
 }
+.project-wrap--wide { width: min(1200px, 100% - (var(--pad) * 2)); }
 
-/* ── Eyebrow / title / subtitle ─────────────────────────── */
+/* ── Eyebrow / title / subtitle ────────────────────────────────────── */
 
 .project-eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 600;
   margin: 0 0 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
 }
 
 .project-title {
-  font-family: "Futura", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(40px, 6vw, 88px);
+  font-size: clamp(2.25rem, min(6.5vw, 13svh), 5.5rem);
   line-height: 0.96;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: #fff;
-  margin: 0;
+  text-wrap: balance;
 }
 
 .project-subtitle {
-  font-size: clamp(16px, 2.2vw, 22px);
-  font-weight: 400;
-  color: var(--text-muted);
-  margin: 18px 0 0;
-  max-width: 60ch;
-}
-
-/* ── Photo project: full-bleed cover hero ───────────────── */
-
-.project-hero {
-  position: relative;
-  min-height: clamp(440px, 78vh, 820px);
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-}
-
-.project-cover {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.project-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top,
-    rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.15) 100%);
-  z-index: 1;
-}
-
-.project-hero-inner {
-  position: relative;
-  z-index: 2;
-  padding: 0 0 64px;
-}
-
-.project-hero .project-subtitle {
-  color: rgba(237, 236, 232, 0.78);
-}
-
-/* ── Body copy ──────────────────────────────────────────── */
-
-.project-intro {
-  padding-top: 64px;
-}
-
-.project-text {
-  max-width: 68ch;
-  font-size: clamp(16px, 1.5vw, 18px);
-  line-height: 1.75;
-  color: rgba(237, 236, 232, 0.82);
-}
-
-.project-text p { margin: 0 0 1.2em; }
-.project-text a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
-.project-text h2, .project-text h3, .project-text h4 {
-  font-family: "Futura", system-ui, sans-serif;
-  color: #fff;
-  letter-spacing: -0.01em;
-  margin: 1.6em 0 0.5em;
-}
-
-/* ── Feature subphoto (photo projects) ──────────────────── */
-
-.project-feature {
-  margin-top: 48px;
-}
-.project-feature img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* ── Process shots (captioned behind-the-scenes subphotos) ─ */
-
-.project-process {
-  margin-top: 64px;
-}
-.project-process-title {
-  font-family: "Futura", system-ui, sans-serif;
-  font-weight: 700;
-  font-size: clamp(22px, 3vw, 32px);
-  color: #fff;
-  letter-spacing: -0.01em;
-  margin: 0 0 28px;
-}
-.process-shot {
-  margin: 0 0 40px;
-}
-.process-shot:last-child { margin-bottom: 0; }
-.process-shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.process-shot figcaption {
-  margin-top: 14px;
-  max-width: 68ch;
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-/* ── Extra-photos gallery ───────────────────────────────── */
-
-.project-gallery {
-  margin-top: 48px;
-}
-.project-gallery .project-wrap {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-.project-shot { margin: 0; }
-.project-shot img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 3 / 2;
-}
-
-/* ── Video project: the video is the main event ─────────── */
-
-/* Video pages: the title block sits above the video (no full-bleed hero) */
-.project-head {
-  padding-top: clamp(56px, 9vh, 104px);
+  margin-top: 18px;
+  max-width: 56ch;
+  font-size: clamp(1.0625rem, 2vw, 1.375rem);
+  line-height: 1.4;
+  color: var(--text-2);
 }
 
 .project-stage {
-  padding-top: 18px;
+  padding-top: clamp(32px, 6vh, 64px);
 }
-/* when the video sits under a full-bleed cover hero, give it room to breathe
-   (the tight 18px is only for the plain text-title fallback) */
-.project-hero + .project-stage {
-  padding-top: 56px;
-}
+
+/* The frame takes the film's own shape (--ar, from `aspect:` in the Markdown,
+   16:9 by default) and is sized by whichever runs out first — the column's
+   width or the screen's height — so a vertical reel on a laptop and a
+   widescreen film on a phone both sit fully on screen. */
 .video-frame {
+  --ar: 16 / 9;
+  --ar-n: 1.7778;
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  width: min(100%, calc((100svh - var(--header-height) - 72px) * var(--ar-n)));
+  min-width: min(100%, 220px);
+  margin-inline: auto;
+  aspect-ratio: var(--ar);
   background: #000;
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--line);
 }
 .video-frame iframe,
-.video-frame video {
+.video-frame video,
+.video-poster {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -208,48 +72,253 @@ body.project {
   border: 0;
   display: block;
 }
-.project-video .project-intro { padding-top: 48px; }
+.video-poster { object-fit: cover; transition: transform 1.2s var(--ease-spring), filter 0.4s ease; }
+.video-frame:hover .video-poster { transform: scale(1.03); filter: brightness(0.82); }
 
-/* Instagram reel: portrait, centered — Instagram's embed.js sizes the
-   player itself, so we only constrain the width and center it. */
-.project-stage--ig { padding-top: 18px; }
-.ig-embed {
-  display: flex;
-  justify-content: center;
+/* the whole frame is the play target */
+.video-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  color: #fff;
+  text-decoration: none;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.1));
 }
-.ig-embed .instagram-media {
+.video-play:focus-visible { outline-offset: -6px; }
+.play-ring {
+  position: relative;
+  width: clamp(64px, 9vw, 96px);
+  aspect-ratio: 1;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  transition: transform 0.4s var(--ease-spring), background 0.3s ease;
+}
+.play-ring::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-style: solid;
+  border-width: 11px 0 11px 19px;
+  border-color: transparent transparent transparent #fff;
+  transform: translate(-38%, -50%);
+}
+.video-play:hover .play-ring,
+.video-play:focus-visible .play-ring { transform: scale(1.08); background: var(--accent); border-color: var(--accent); }
+.video-play-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Instagram's embed sizes itself once loaded — let go of the fixed shape */
+.video-frame.is-live[data-provider="instagram"] {
+  aspect-ratio: auto;
+  width: min(100%, 420px);
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+.video-frame.is-live[data-provider="instagram"] .instagram-media {
   margin: 0 auto !important;
   min-width: 0 !important;
   width: 100% !important;
-  max-width: 420px !important;
 }
 
-/* ── Back link ──────────────────────────────────────────── */
+.video-note {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-3);
+}
+.video-note a { color: var(--text-2); text-underline-offset: 3px; }
+.video-note a:hover { color: var(--text); }
 
-.project-back {
-  display: inline-block;
-  margin-top: 80px;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
+/* ── Photo pages: full-bleed cover hero ────────────────────────────── */
+
+.project-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(380px, 78svh, 860px);
+  overflow: hidden;
+  isolation: isolate;
+  background: #0a0a0a;
+}
+.project-cover {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.project-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.4) 45%, rgba(0, 0, 0, 0.2) 100%);
+}
+.project-hero-inner { padding-block: 48px clamp(36px, 7svh, 64px); }
+.project-video .project-hero { min-height: clamp(360px, 66svh, 760px); }
+.project-head { padding-top: clamp(40px, 8vh, 96px); }
+.project-hero .project-subtitle { color: rgba(255, 255, 255, 0.88); }
+.project-hero .project-date { color: rgba(255, 255, 255, 0.8); }
+
+/* ── Body copy ─────────────────────────────────────────────────────── */
+
+.project-intro { padding-top: clamp(44px, 7vh, 72px); }
+
+.project-text {
+  max-width: 66ch;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.75;
+  color: var(--text-2);
+}
+.project-text p { margin-bottom: 1.2em; }
+.project-text p:first-child::first-line { color: var(--text); }
+.project-text strong { color: var(--text); font-weight: 600; }
+.project-text a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-bright);
+  text-underline-offset: 4px;
+}
+.project-text a:hover { text-decoration-thickness: 2px; }
+.project-text h2,
+.project-text h3,
+.project-text h4 {
+  font-family: var(--font-display);
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 1.8em 0 0.5em;
+}
+
+/* ── Feature image / behind the scenes ─────────────────────────────── */
+
+.project-feature { margin-top: clamp(40px, 7vh, 72px); }
+.project-feature img,
+.process-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg-card);
+}
+/* a tall still (a portrait frame) shouldn't run past the screen */
+.project-feature img {
+  max-height: 92svh;
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.project-process { margin-top: clamp(48px, 8vh, 88px); }
+.project-process-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin-bottom: 28px;
+}
+.process-shot { margin-bottom: 40px; }
+.process-shot:last-child { margin-bottom: 0; }
+.process-shot figcaption,
+.project-shot figcaption {
+  margin-top: 14px;
+  max-width: 68ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+/* ── Gallery — every photo keeps its own shape (no forced crop) ─────── */
+
+.project-gallery { margin-top: clamp(40px, 7vh, 72px); }
+.gallery-grid {
+  columns: 2;
+  column-gap: 12px;
+}
+.project-shot {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.project-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg-card);
+  transition: filter 0.3s ease;
+}
+.project-shot img:hover { filter: brightness(0.82); }
+
+@media (min-width: 1500px) { .gallery-grid { columns: 3; } }
+@media (max-width: 640px)  { .gallery-grid { columns: 1; } }
+/* landscape phones are wide but short: keep two columns */
+@media (max-width: 960px) and (orientation: landscape) and (min-width: 520px) { .gallery-grid { columns: 2; } }
+
+/* ── Pager ─────────────────────────────────────────────────────────── */
+
+.project-pager {
+  margin-top: clamp(64px, 11vh, 128px);
+  border-top: 1px solid var(--line);
+}
+.pager-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 16px;
+}
+.pager-link,
+.pager-all {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding-block: clamp(22px, 4vh, 40px);
   text-decoration: none;
+  color: var(--text);
+}
+.pager-next { text-align: right; align-items: flex-end; }
+.pager-label,
+.pager-all {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
   transition: color var(--ease);
 }
-.project-back:hover { color: var(--accent); }
-
-/* Keep the contact card clear of the back link */
-.project-page .contact { margin-top: 96px; }
-
-/* ── Responsive ─────────────────────────────────────────── */
-
-@media (max-width: 768px) {
-  .project-wrap { width: calc(100% - 40px); }
-  .project-hero { min-height: 70vh; }
-  .project-hero-inner { padding-bottom: 40px; }
-  .project-intro { padding-top: 48px; }
-  .project-feature,
-  .project-process,
-  .project-gallery { margin-top: 48px; }
-  .project-gallery .project-wrap { grid-template-columns: 1fr; }
-  .project-back { margin-top: 56px; }
+.pager-all { align-items: center; text-align: center; padding-inline: clamp(8px, 2vw, 28px); }
+.pager-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.0625rem, 2vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  background: linear-gradient(var(--accent-bright), var(--accent-bright)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.4s var(--ease-spring);
+  padding-bottom: 4px;
 }
+.pager-next .pager-title { background-position: right bottom; }
+.pager-link:hover .pager-title { background-size: 100% 2px; }
+.pager-link:hover .pager-label,
+.pager-all:hover { color: var(--text); }
+
+@media (max-width: 640px) {
+  .pager-inner { grid-template-columns: 1fr 1fr; }
+  .pager-all { grid-column: 1 / -1; grid-row: 2; border-top: 1px solid var(--line); padding-block: 12px; }
+  .pager-link.is-empty { display: block; }
+}
+
+.project-page + .contact { margin-top: 0; }

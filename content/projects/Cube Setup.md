@@ -7,6 +7,7 @@
 title:        CubingUSA Nationals 2023 Doc
 subtitle:     Why do we Setup Cubes?
 section:      Videos         # photos | films | xr  (which portfolio it appears in)
+category:     Documentary
 date:         2023-08-21      # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google
@@ -20,9 +21,6 @@ subphoto:
 
 # Optional extra photos — as many as you like.
 gallery:
-  - assets/img/projects/my-project/1.jpg
-  - assets/img/projects/my-project/2.jpg
-  - assets/img/projects/my-project/3.jpg
 
 # For a VIDEO project, paste a link here. Supported:
 #   - YouTube (public OR unlisted): https://youtu.be/VIDEO_ID

@@ -7,6 +7,7 @@
 title:        Sports Highlight Reel 2024
 subtitle:     A Summary of my 2024 Sports portfolio
 section:      films      # photos | films | xr  (which portfolio it appears in)
+category:     Reel
 date:         2024-12-26      # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google

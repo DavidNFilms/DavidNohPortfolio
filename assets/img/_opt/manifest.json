@@ -1,0 +1,371 @@
+{
+ "assets/icons/Logo v2 White Trans.png": {
+  "fp": "10242:32abd54884bd5da7",
+  "base": "assets/img/_opt/icons/Logo-v2-White-Trans",
+  "width": 458,
+  "height": 688,
+  "widths": [
+   160,
+   458
+  ]
+ },
+ "assets/img/Awards-Logos/NHD_Edited.png": {
+  "fp": "23154:d949d70cd8f92f44",
+  "base": "assets/img/_opt/Awards-Logos/NHD_Edited",
+  "width": 395,
+  "height": 382,
+  "widths": [
+   160,
+   395
+  ]
+ },
+ "assets/img/Awards-Logos/Scholastic_logo_edited.png": {
+  "fp": "412349:9b8564585e5d29c0",
+  "base": "assets/img/_opt/Awards-Logos/Scholastic_logo_edited",
+  "width": 3840,
+  "height": 2160,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/Photo Dump/Screenshot 2026-06-23 152253.png": {
+  "fp": "5212456:dbdd9adbb6d78067",
+  "base": "assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253",
+  "width": 3204,
+  "height": 1789,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/Photo Dump/Screenshot 2026-06-23 153802.png": {
+  "fp": "5181104:ad89c0e27ed9667e",
+  "base": "assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802",
+  "width": 3835,
+  "height": 1998,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/Project-grid/film.jpg": {
+  "fp": "2176400:2bcf152afde8f71b",
+  "base": "assets/img/_opt/Project-grid/film",
+  "width": 1500,
+  "height": 2250,
+  "widths": [
+   160,
+   480,
+   960,
+   1500
+  ]
+ },
+ "assets/img/Project-grid/photo.png": {
+  "fp": "2846366:0d899f1440c2a478",
+  "base": "assets/img/_opt/Project-grid/photo",
+  "width": 1494,
+  "height": 2241,
+  "widths": [
+   160,
+   480,
+   960,
+   1494
+  ]
+ },
+ "assets/img/Projects/Subphotos/canvas_still-and-moving-images-final-260717_1819.png": {
+  "fp": "3083964:7dff924cd6f5206e",
+  "base": "assets/img/_opt/Projects/Subphotos/canvas_still-and-moving-images-final-260717_1819",
+  "width": 5020,
+  "height": 2812,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/Projects/Subphotos/honduras-missions-2025-sub.jpg": {
+  "fp": "448409:bbd5beb2cd0215c1",
+  "base": "assets/img/_opt/Projects/Subphotos/honduras-missions-2025-sub",
+  "width": 2000,
+  "height": 3000,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2000
+  ]
+ },
+ "assets/img/Projects/covers/P1264098.jpg": {
+  "fp": "16662336:bffc712b7f895844",
+  "base": "assets/img/_opt/Projects/covers/P1264098",
+  "width": 6000,
+  "height": 4000,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/Projects/covers/charming-commercial.jpg": {
+  "fp": "142405:c2827c4daf41db8f",
+  "base": "assets/img/_opt/Projects/covers/charming-commercial",
+  "width": 1920,
+  "height": 1080,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   1920
+  ]
+ },
+ "assets/img/Projects/covers/fallout.jpg": {
+  "fp": "44964:5814e6a0c79bc840",
+  "base": "assets/img/_opt/Projects/covers/fallout",
+  "width": 1600,
+  "height": 900,
+  "widths": [
+   160,
+   480,
+   960,
+   1600
+  ]
+ },
+ "assets/img/Projects/covers/honduras-missions-2025.jpg": {
+  "fp": "680375:2bd4f6ef5fce285e",
+  "base": "assets/img/_opt/Projects/covers/honduras-missions-2025",
+  "width": 2000,
+  "height": 1333,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2000
+  ]
+ },
+ "assets/img/Projects/covers/medical-malfeasance.jpg": {
+  "fp": "136924:f1aca1014e9bd49c",
+  "base": "assets/img/_opt/Projects/covers/medical-malfeasance",
+  "width": 1600,
+  "height": 900,
+  "widths": [
+   160,
+   480,
+   960,
+   1600
+  ]
+ },
+ "assets/img/Projects/covers/sports-reel-2024.jpg": {
+  "fp": "132081:752ed129ed5030bf",
+  "base": "assets/img/_opt/Projects/covers/sports-reel-2024",
+  "width": 1280,
+  "height": 720,
+  "widths": [
+   160,
+   480,
+   960,
+   1280
+  ]
+ },
+ "assets/img/hero.jpg": {
+  "fp": "1622907:b196c3fc7c8319b1",
+  "base": "assets/img/_opt/hero",
+  "width": 6000,
+  "height": 4000,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2400
+  ]
+ },
+ "assets/img/nyu-athletics/DOYuU6zEcz7.jpg": {
+  "fp": "59166:d59dc08a5e49c48d",
+  "base": "assets/img/_opt/nyu-athletics/DOYuU6zEcz7",
+  "width": 640,
+  "height": 1136,
+  "widths": [
+   160,
+   480,
+   640
+  ]
+ },
+ "assets/img/nyu-athletics/DPjrEu9Dw-T.jpg": {
+  "fp": "114680:9438a1f8d70837a1",
+  "base": "assets/img/_opt/nyu-athletics/DPjrEu9Dw-T",
+  "width": 1080,
+  "height": 1920,
+  "widths": [
+   160,
+   480,
+   960,
+   1080
+  ]
+ },
+ "assets/img/nyu-athletics/DPo6ChejXNL.jpg": {
+  "fp": "316361:79a952dc4f7545cd",
+  "base": "assets/img/_opt/nyu-athletics/DPo6ChejXNL",
+  "width": 1080,
+  "height": 1920,
+  "widths": [
+   160,
+   480,
+   960,
+   1080
+  ]
+ },
+ "assets/img/nyu-athletics/DPpFN8vD_vX.jpg": {
+  "fp": "45830:7eab00c061b201cd",
+  "base": "assets/img/_opt/nyu-athletics/DPpFN8vD_vX",
+  "width": 640,
+  "height": 1136,
+  "widths": [
+   160,
+   480,
+   640
+  ]
+ },
+ "assets/img/nyu-athletics/DQwxKL9CD9G.jpg": {
+  "fp": "179559:a5ea099932cbad1d",
+  "base": "assets/img/_opt/nyu-athletics/DQwxKL9CD9G",
+  "width": 1080,
+  "height": 1920,
+  "widths": [
+   160,
+   480,
+   960,
+   1080
+  ]
+ },
+ "assets/img/nyu-athletics/DQzqBOujxv2.jpg": {
+  "fp": "72064:a56cee994d9943ce",
+  "base": "assets/img/_opt/nyu-athletics/DQzqBOujxv2",
+  "width": 720,
+  "height": 960,
+  "widths": [
+   160,
+   480,
+   720
+  ]
+ },
+ "assets/img/nyu-athletics/DRXzXkhEbyn.jpg": {
+  "fp": "2030365:2ccb7afc8ef92ec9",
+  "base": "assets/img/_opt/nyu-athletics/DRXzXkhEbyn",
+  "width": 1520,
+  "height": 1900,
+  "widths": [
+   160,
+   480,
+   960,
+   1520
+  ]
+ },
+ "assets/img/nyu-athletics/DV3hVd0jR0L.jpg": {
+  "fp": "79191:dd0e5224b130ba37",
+  "base": "assets/img/_opt/nyu-athletics/DV3hVd0jR0L",
+  "width": 640,
+  "height": 1136,
+  "widths": [
+   160,
+   480,
+   640
+  ]
+ },
+ "assets/img/nyu-athletics/DVJbBA7DRkw.jpg": {
+  "fp": "280835:f0dc5d28faf7289a",
+  "base": "assets/img/_opt/nyu-athletics/DVJbBA7DRkw",
+  "width": 1080,
+  "height": 1916,
+  "widths": [
+   160,
+   480,
+   960,
+   1080
+  ]
+ },
+ "assets/img/nyu-athletics/DVRQ69SkQgz.jpg": {
+  "fp": "139424:a6a42be30261d046",
+  "base": "assets/img/_opt/nyu-athletics/DVRQ69SkQgz",
+  "width": 720,
+  "height": 1280,
+  "widths": [
+   160,
+   480,
+   720
+  ]
+ },
+ "assets/img/nyu-athletics/DdZyEnjxXeB.jpg": {
+  "fp": "123851:4dc01246801b4678",
+  "base": "assets/img/_opt/nyu-athletics/DdZyEnjxXeB",
+  "width": 640,
+  "height": 1136,
+  "widths": [
+   160,
+   480,
+   640
+  ]
+ },
+ "assets/img/still-moving/Two dozen/23.jpg": {
+  "fp": "2197560:eebb49ae184b05b2",
+  "base": "assets/img/_opt/still-moving/Two-dozen/23",
+  "width": 2250,
+  "height": 1500,
+  "widths": [
+   160,
+   480,
+   960,
+   1600,
+   2250
+  ]
+ },
+ "og:assets/img/Photo Dump/Screenshot 2026-06-23 152253.png": {
+  "fp": "5212456:dbdd9adbb6d78067"
+ },
+ "og:assets/img/Photo Dump/Screenshot 2026-06-23 153802.png": {
+  "fp": "5181104:ad89c0e27ed9667e"
+ },
+ "og:assets/img/Projects/covers/P1264098.jpg": {
+  "fp": "16662336:bffc712b7f895844"
+ },
+ "og:assets/img/Projects/covers/charming-commercial.jpg": {
+  "fp": "142405:c2827c4daf41db8f"
+ },
+ "og:assets/img/Projects/covers/fallout.jpg": {
+  "fp": "44964:5814e6a0c79bc840"
+ },
+ "og:assets/img/Projects/covers/honduras-missions-2025.jpg": {
+  "fp": "680375:2bd4f6ef5fce285e"
+ },
+ "og:assets/img/Projects/covers/medical-malfeasance.jpg": {
+  "fp": "136924:f1aca1014e9bd49c"
+ },
+ "og:assets/img/Projects/covers/sports-reel-2024.jpg": {
+  "fp": "132081:752ed129ed5030bf"
+ },
+ "og:assets/img/hero.jpg": {
+  "fp": "1622907:b196c3fc7c8319b1"
+ },
+ "og:assets/img/nyu-athletics/DRXzXkhEbyn.jpg": {
+  "fp": "2030365:2ccb7afc8ef92ec9"
+ },
+ "og:assets/img/still-moving/Two dozen/23.jpg": {
+  "fp": "2197560:eebb49ae184b05b2"
+ }
+}

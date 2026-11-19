@@ -1,0 +1,13 @@
+/* Self-hosted Space Grotesk (SIL Open Font License).
+   This file is only linked once assets/fonts/SpaceGrotesk-latin.woff2 exists —
+   run `node tools/localize-assets.js` to download it. Until then the builder
+   links Google Fonts instead. Self-hosting means no visitor request ever goes
+   to Google just to render text. */
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../assets/fonts/SpaceGrotesk-latin.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}

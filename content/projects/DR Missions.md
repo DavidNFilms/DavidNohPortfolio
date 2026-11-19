@@ -2,6 +2,7 @@
 title:        Dominican Republic Missions
 subtitle:     My first Missions trip Mini-Doc
 section:      Videos
+category:     Documentary
 date:         2023-06-01
 
 # Video link — Google Drive (set the file's sharing to "Anyone with the link")

@@ -2,6 +2,7 @@
 title:        Medical Malfeasance: The Thalidomide Tragedy
 subtitle:     A National History Day group documentary on the thalidomide disaster
 section:      films          # photos | films | xr  (which portfolio it appears in)
+category:     Documentary
 date:         2025-06-01     # YYYY-MM-DD — newest projects list first
 
 # Title card pulled from the documentary (also the section thumbnail).

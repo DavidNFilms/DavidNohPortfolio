@@ -2,52 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Minute Privacy Policy — David Noh</title>
   <meta name="description" content="Privacy policy for Minute, a personal desk companion by David Noh." />
+  <!-- SHARED:head:START -->
+  <link rel="canonical" href="https://davidnoh.com/minute-privacy/">
+  <meta name="author" content="David Noh">
+  <meta name="theme-color" content="#101010">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:site_name" content="David Noh">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Minute Privacy Policy — David Noh">
+  <meta property="og:description" content="Privacy policy for Minute, a personal desk companion by David Noh.">
+  <meta property="og:url" content="https://davidnoh.com/minute-privacy/">
+  <meta property="og:image" content="https://davidnoh.com/assets/img/_opt/hero-og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="apple-touch-icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css" />
-  <style>
-    .about-prose a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-    .about-prose h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; opacity: .6; margin: 40px 0 10px; }
-    .about-prose h2:first-child { margin-top: 0; }
-  </style>
+  <link rel="preload" href="../assets/fonts/Futura100-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="../css/styles.css?v=6e71ec2f">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="../js/main.js?v=942d611e" defer></script>
+  <!-- SHARED:head:END -->
 </head>
 
 <body class="about">
-  <header class="site-header">
+  <!-- SHARED:nav:START -->
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
     <div class="container header-inner">
-      <a class="brand" href="../index.html" aria-label="Home">
-        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="Logo" />
+      <a class="brand" href="../index.html" aria-label="David Noh — home">
+        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="" data-sizes="32px" width="458" height="688" srcset="../assets/img/_opt/icons/Logo-v2-White-Trans-160.webp 160w, ../assets/img/_opt/icons/Logo-v2-White-Trans-458.webp 458w" sizes="32px" data-full="../assets/img/_opt/icons/Logo-v2-White-Trans-458.webp" />
       </a>
-
-      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-        <span class="sr-only">Toggle menu</span>☰
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="sr-only">Menu</span>
       </button>
-
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <div class="nav-item has-dropdown">
-          <a href="../index.html#projects">Portfolio</a>
-          <div class="dropdown" aria-label="Portfolio links">
-            <a href="../Video/index.html">Films</a>
-            <a href="../Photos/index.html">Photo</a>
-            <a href="../XR/underconstruction.html">XR</a>
-          </div>
-        </div>
+        <a href="../Video/index.html">Films</a>
+        <a href="../Photos/index.html">Photo</a>
+        <a href="../XR/index.html">XR</a>
         <a href="../About/about.html">About</a>
-        <a href="../index.html#contact">Contact</a>
+        <a href="#contact">Contact</a>
       </nav>
     </div>
   </header>
+  <!-- SHARED:nav:END -->
 
-  <main class="about-page">
+  <main id="main" class="about-page legal-page">
     <section class="about-hero">
       <div class="container">
-        <p class="about-eyebrow">Privacy Policy</p>
+        <p class="label">Privacy Policy</p>
         <h1>Minute<span>.</span></h1>
         <p class="about-lead">A personal desk companion built and used only by David Noh. Last updated October 11, 2026.</p>
       </div>
@@ -61,14 +70,48 @@
           <p>With the developer's permission, Minute reads events from, and creates or updates events in, the developer's own Google Calendar so the day's schedule can be shown on a desk display and focus blocks can be added from it. Minute is not offered to the public.</p>
           <h2>How data is used</h2>
           <p>Calendar data is processed only on the developer's own computer and shown on the developer's own display. It is not sold, shared, sent to third parties, or used for advertising. Google sign-in tokens are stored only on that computer.</p>
-          <p>Minute's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+          <p>Minute's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
           <h2>Revoking access &amp; contact</h2>
-          <p>Access can be removed at any time at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>. Questions: <a href="mailto:davidnoh0513@gmail.com">davidnoh0513@gmail.com</a>.</p>
+          <p>Access can be removed at any time at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">myaccount.google.com/permissions</a>. Questions: <a href="mailto:davidnoh0513@gmail.com">davidnoh0513@gmail.com</a>.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="../js/main.js"></script>
+  <!-- SHARED:footer:START -->
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title" class="contact-title">Contact</h2>
+      <ul class="contact-links">
+        <li><a href="mailto:Daviddwnoh@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" /></svg>
+          <span>Daviddwnoh@gmail.com</span>
+        </a></li>
+        <li><a href="https://instagram.com/davidnfilms" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" /></svg>
+          <span>@davidnfilms</span><span class="sr-only"> on Instagram (opens in a new tab)</span>
+        </a></li>
+        <li><a href="https://www.youtube.com/@Davidnfilms25" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" /></svg>
+          <span>youtube.com/@Davidnfilms25</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/daviddwnoh" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><path d="M8.5 10.5v5M8.5 8v.01M12 15.5v-5M12 13c0-1.5 1-2.5 2.2-2.5s1.8.8 1.8 2.3v2.7" /></svg>
+          <span>linkedin.com/in/daviddwnoh</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 David Noh</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../privacy/index.html">Privacy</a>
+        <a href="../privacy/index.html#accessibility">Accessibility</a>
+        <a href="#top">Back to top</a>
+      </nav>
+    </div>
+  </footer>
+  <!-- SHARED:footer:END -->
 </body>
 </html>

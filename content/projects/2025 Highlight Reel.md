@@ -7,6 +7,7 @@
 title:        Highlight Reel 2025
 subtitle:     A Summary of my 2025 portfolio
 section:      films      # photos | films | xr  (which portfolio it appears in)
+category:     Reel
 date:         2025-12-30   # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google

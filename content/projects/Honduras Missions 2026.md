@@ -2,6 +2,7 @@
 title:        Honduras Missions 2026
 subtitle:     A Narrative Missions Documentary
 section:      films          # photos | films | xr  (which portfolio it appears in)
+category:     Documentary
 date:         2026-06-01      # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google

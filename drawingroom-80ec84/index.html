@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Drawing 11: Drawingroom — David Noh</title>
+  <meta name="description" content="Drawing 11: analog sketches traced into vectors and rebuilt as 2 mm paper-cutout 3D motifs for Drawingroom." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="author" content="David Noh">
+  <meta name="theme-color" content="#101010">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="apple-touch-icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="preload" href="../assets/fonts/Futura100-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="../css/styles.css?v=6e71ec2f">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="../js/main.js?v=942d611e" defer></script>
+  <script type="module" src="model-viewer.min.js"></script>
+  <style>
+    .d11-wrap { padding-bottom: 4rem; }
+    .d11-section { margin-top: 3.5rem; }
+    .d11-section > h2 { margin-bottom: .4rem; }
+    .d11-section > p { max-width: 62ch; opacity: .8; margin-bottom: 1.4rem; }
+    .d11-board img, .d11-comp img { width: 100%; height: auto; display: block; border-radius: 4px; }
+    .d11-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+    .d11-card { background: #f4efe3; color: #1d1d1d; border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: .75rem; }
+    .d11-card h3 { margin: 0; font-size: 1.05rem; color: #1d1d1d; }
+    .d11-card .d11-dims { font-size: .85rem; opacity: .7; margin: 0; }
+    .d11-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; align-items: center; }
+    .d11-pair img { width: 100%; height: 160px; object-fit: contain; background: #fff; border-radius: 3px; }
+    model-viewer { width: 100%; height: 300px; background: #e8e3d8; border-radius: 4px; --poster-color: transparent; }
+    .d11-dl { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .d11-dl a { font-size: .85rem; color: #1d1d1d; border: 1px solid #1d1d1d55; border-radius: 999px; padding: .3rem .75rem; text-decoration: none; }
+    .d11-dl a:hover { background: #1d1d1d; color: #f4efe3; }
+  </style>
+</head>
+
+<body class="about">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="David Noh — home">
+        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="" width="458" height="688" />
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="about-page d11-wrap">
+    <section class="about-hero">
+      <div class="container">
+        <p class="label">Drawing 11 · Combining Analog and Digital Tools</p>
+        <h1>Drawingroom<span>.</span></h1>
+        <p class="about-lead">Pencil motifs from my sketchbook, traced into vectors in Illustrator, then rebuilt as 2&nbsp;mm paper-cutout objects. These are the first brushes for Drawingroom, an AR tool that turns hand-drawn motifs into a palette for drawing in space.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="d11-section d11-board">
+        <h2>Process</h2>
+        <p>Analog sketch → cleaned scan → Illustrator vector → paper cutout → repeated in space.</p>
+        <a href="process-board.jpg"><img src="process-board.webp" alt="Process board showing a bottle, fish and shell moving from pencil sketch to cleaned scan, vector, paper cutout, and a spatial composition" width="2400" height="2880" loading="lazy"></a>
+      </section>
+
+      <section class="d11-section">
+        <h2>The motifs in 3D</h2>
+        <p>Each drawing is extruded 2&nbsp;mm with smoothed outlines, like a cut-paper charm. Drag to turn them around.</p>
+        <div class="d11-grid">
+          <article class="d11-card">
+            <h3>Fish</h3>
+            <div class="d11-pair"><img src="fish-sketch.webp" alt="Pencil sketch of a fish" loading="lazy"><img src="fish-cutout.webp" alt="Fish as a paper cutout" loading="lazy"></div>
+            <model-viewer src="drawing11_fish_2mm.glb" alt="3D fish cutout, 2 mm thick" camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg" camera-orbit="20deg 75deg auto" shadow-intensity="0.6" exposure="1.1" interaction-prompt="none"></model-viewer>
+            <p class="d11-dims">≈ 55 × 30 × 2 mm</p>
+            <div class="d11-dl"><a href="drawing11_fish_2mm.glb" download>GLB</a><a href="drawing11_fish_2mm.stl" download>STL</a><a href="drawing11_fish.svg" download>SVG</a></div>
+          </article>
+          <article class="d11-card">
+            <h3>Shell</h3>
+            <div class="d11-pair"><img src="shell-sketch.webp" alt="Pencil sketch of a shell" loading="lazy"><img src="shell-cutout.webp" alt="Shell as a paper cutout" loading="lazy"></div>
+            <model-viewer src="drawing11_shell_2mm.glb" alt="3D shell cutout, 2 mm thick" camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg" camera-orbit="20deg 75deg auto" shadow-intensity="0.6" exposure="1.1" interaction-prompt="none"></model-viewer>
+            <p class="d11-dims">≈ 39 × 33 × 2 mm</p>
+            <div class="d11-dl"><a href="drawing11_shell_2mm.glb" download>GLB</a><a href="drawing11_shell_2mm.stl" download>STL</a><a href="drawing11_shell.svg" download>SVG</a></div>
+          </article>
+          <article class="d11-card">
+            <h3>Bottle</h3>
+            <div class="d11-pair"><img src="bottle-sketch.webp" alt="Pencil sketch of a bottle" loading="lazy"><img src="bottle-cutout.webp" alt="Bottle as a paper cutout" loading="lazy"></div>
+            <model-viewer src="drawing11_bottle_2mm.glb" alt="3D bottle cutout, 2 mm thick" camera-controls auto-rotate auto-rotate-delay="0" rotation-per-second="20deg" camera-orbit="20deg 75deg auto" shadow-intensity="0.6" exposure="1.1" interaction-prompt="none"></model-viewer>
+            <p class="d11-dims">≈ 27 × 55 × 2 mm</p>
+            <div class="d11-dl"><a href="drawing11_bottle_2mm.glb" download>GLB</a><a href="drawing11_bottle_2mm.stl" download>STL</a><a href="drawing11_bottle.svg" download>SVG</a></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="d11-section d11-comp">
+        <h2>Repeated in space</h2>
+        <p>One motif becomes a mark: the fish repeated at different depths, scales and angles turns into a school, and the shells settle on the floor.</p>
+        <img src="composition.webp" alt="Composition of repeated paper-cutout fish curving through space above shells on the floor, with a bottle hanging like a charm" width="2400" height="1500" loading="lazy">
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 David Noh</p>
+    </div>
+  </footer>
+</body>
+</html>

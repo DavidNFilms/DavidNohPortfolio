@@ -1,0 +1,17 @@
+{
+  "name": "davidnoh-portfolio",
+  "private": true,
+  "description": "David Noh's portfolio — a static site built by a zero-dependency Node script.",
+  "scripts": {
+    "build": "node tools/build-projects.js",
+    "dev": "node tools/serve.js",
+    "check": "node tools/check-site.js",
+    "new": "node tools/new-project.js",
+    "covers": "node tools/fetch-ig-covers.js",
+    "localize": "node tools/localize-assets.js",
+    "publish-check": "node tools/build-projects.js && node tools/check-site.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

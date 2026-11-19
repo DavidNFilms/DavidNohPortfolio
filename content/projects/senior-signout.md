@@ -4,6 +4,7 @@
 title:        Senior Signout
 subtitle:     Last day of classes
 section:      films          # photos | films | xr
+category:     Reel
 date:         2025-06-25               # YYYY-MM-DD — newest list first (fill in to order it)
 
 cover: assets\img\Photo Dump\Screenshot 2026-06-23 152253.png

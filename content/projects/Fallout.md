@@ -2,6 +2,7 @@
 title:        Fallout
 subtitle:     A National History Day documentary on nuclear technologies after the Soviet collapse
 section:      films          # photos | films | xr  (which portfolio it appears in)
+category:     Documentary
 date:         2024-06-01     # YYYY-MM-DD — newest projects list first
 
 # Title card pulled from the documentary (also the section thumbnail).

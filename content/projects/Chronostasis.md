@@ -2,6 +2,7 @@
 title:        Chronostasis
 subtitle:     A short film on the illusion of a stopped clock
 section:      films          # photos | films | xr  (which portfolio it appears in)
+category:     Short Film
 date:         2026-05-01      # YYYY-MM-DD — newest projects list first
 
 # Main image. Either a path from the repo root (no leading ../) OR a Google

@@ -2,176 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Films — David Noh</title>
+  <meta name="description" content="Documentaries, short films, commercials and reels by David Noh, including mission documentaries, National History Day films and NYU Athletics coverage." />
+  <!-- SHARED:head:START -->
+  <link rel="canonical" href="https://davidnoh.com/Video/">
+  <meta name="author" content="David Noh">
+  <meta name="theme-color" content="#101010">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:site_name" content="David Noh">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Films — David Noh">
+  <meta property="og:description" content="Documentaries, short films, commercials and reels by David Noh, including mission documentaries, National History Day films and NYU Athletics coverage.">
+  <meta property="og:url" content="https://davidnoh.com/Video/">
+  <meta property="og:image" content="https://davidnoh.com/assets/img/_opt/hero-og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
-  <link rel="icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
+  <link rel="apple-touch-icon" href="../assets/favicon/Logo%20v2%20Black%20Bkg.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preload" href="../assets/fonts/Futura100-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="../css/styles.css?v=6e71ec2f">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="../js/main.js?v=942d611e" defer></script>
+  <!-- SHARED:head:END -->
 </head>
 
 <body class="films">
-  <header class="site-header">
+  <!-- SHARED:nav:START -->
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
     <div class="container header-inner">
-      <a class="brand" href="../index.html" aria-label="Home">
-        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="Logo" />
+      <a class="brand" href="../index.html" aria-label="David Noh — home">
+        <img class="brand-logo" src="../assets/icons/Logo%20v2%20White%20Trans.png" alt="" data-sizes="32px" width="458" height="688" srcset="../assets/img/_opt/icons/Logo-v2-White-Trans-160.webp 160w, ../assets/img/_opt/icons/Logo-v2-White-Trans-458.webp 458w" sizes="32px" data-full="../assets/img/_opt/icons/Logo-v2-White-Trans-458.webp" />
       </a>
-
-      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-        <span class="sr-only">Toggle menu</span>☰
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="sr-only">Menu</span>
       </button>
-
       <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <div class="nav-item has-dropdown">
-          <a href="#projects">Portfolio</a>
-          <div class="dropdown" aria-label="Portfolio links">
-            <a href="../Video/index.html">Films</a>
-            <a href="../Photos/index.html">Photo</a>
-            <a href="../XR/underconstruction.html">XR</a>
-          </div>
-        </div>
+        <a href="../Video/index.html" aria-current="page">Films</a>
+        <a href="../Photos/index.html">Photo</a>
+        <a href="../XR/index.html">XR</a>
         <a href="../About/about.html">About</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
   </header>
+  <!-- SHARED:nav:END -->
 
-  <main>
+  <main id="main">
     <!-- HERO -->
-    <section class="hero" aria-label="Hero">
-      <img class="hero-bg" src="../assets/img/Project-grid/film.jpg" alt="" fetchpriority="high" decoding="async" />
+    <section class="hero hero--section" aria-labelledby="hero-title">
+      <img class="hero-bg" src="../assets/img/Project-grid/film.jpg" alt="" fetchpriority="high" decoding="async" data-sizes="100vw" style="--focus: 50% 34%" width="1500" height="2250" srcset="../assets/img/_opt/Project-grid/film-160.webp 160w, ../assets/img/_opt/Project-grid/film-480.webp 480w, ../assets/img/_opt/Project-grid/film-960.webp 960w, ../assets/img/_opt/Project-grid/film-1500.webp 1500w" sizes="100vw" data-full="../assets/img/_opt/Project-grid/film-1500.webp" />
 
       <div class="container hero-inner">
         <div class="hero-content">
-          <p class="hero-eyebrow">David Noh &mdash; Filmmaking</p>
-          <h1 class="hero-title">Films<span class="hero-dot">.</span></h1>
+          <p class="label">David Noh &mdash; Filmmaking</p>
+          <h1 class="hero-title" id="hero-title">Films<span class="dot">.</span></h1>
         </div>
 
-        <div class="hero-credit">
-          <div class="hero-credit-title">NYU Men's Basketball</div>
-          <div class="hero-credit-sub">David Noh 2025</div>
-        </div>
-
-        <a class="hero-scroll" href="#projects" aria-label="Scroll to projects">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91.722 35.486" class="scroll-arrow" aria-hidden="true">
-            <g opacity="0.6">
-              <path d="M0,25.483a10,10,0,0,1-9.18-6.024,10,10,0,0,1,5.2-13.153l35.7-15.481a10,10,0,0,1,13.153,5.2,10,10,0,0,1-5.2,13.153L3.978,24.655A9.967,9.967,0,0,1,0,25.483Z" transform="translate(46.019 10.003)" fill="white"/>
-              <path d="M36.012,25.483a9.967,9.967,0,0,1-3.944-.815L-3.949,9.187A10,10,0,0,1-9.187-3.949,10,10,0,0,1,3.949-9.187L39.965,6.293a10,10,0,0,1-3.954,19.19Z" transform="translate(10.003 10.003)" fill="white"/>
-            </g>
-          </svg>
-        </a>
+        <p class="hero-credit">
+          <span class="hero-credit-title">NYU Men&rsquo;s Basketball</span><br />
+          <span class="hero-credit-sub">David Noh 2025</span>
+        </p>
       </div>
     </section>
 
-    <!-- FILMS GRID — add project cards here as work is completed -->
-    <section id="projects" class="projects" aria-label="Films">
+    <!-- FILMS — cards and filter chips are generated from content/projects/*.md -->
+    <section id="projects" class="section section--raised" aria-labelledby="films-title">
       <div class="container">
-        <h2 class="section-title">Selected Work</h2>
-        <div class="project-grid">
-          <!-- Featured link to the standalone NYU Athletics wall (kept outside
-               the PROJECTS markers so the builder never overwrites it). -->
-          <a class="athletics-feature-card" href="../Athletics/index.html">
-            <span class="afc-eyebrow">Featured</span>
-            <span class="afc-title">NYU Athletics <span class="afc-arrow" aria-hidden="true">&rarr;</span></span>
-            <span class="afc-sub">See my work for the NYU Athletics socials</span>
-          </a>
+        <!-- Featured link to the standalone NYU Athletics wall (hand-written;
+             the builder never touches it). -->
+        <a class="athletics-feature-card reveal" href="../Athletics/index.html">
+          <span class="afc-eyebrow">Featured</span>
+          <span class="afc-title">NYU Athletics <span class="afc-arrow" aria-hidden="true">&rarr;</span></span>
+          <span class="afc-sub">See my work for the NYU Athletics socials</span>
+        </a>
+
+        <h2 class="section-title" id="films-title">Selected Work</h2>
+
+        <!-- FILTERS:films:START -->
+        <div class="filters" role="group" aria-label="Filter films by type">
+            <button class="chip" type="button" data-filter="all" aria-pressed="true">All <span class="chip-count">12</span></button>
+            <button class="chip" type="button" data-filter="documentary" aria-pressed="false">Documentary <span class="chip-count">6</span></button>
+            <button class="chip" type="button" data-filter="reel" aria-pressed="false">Reel <span class="chip-count">3</span></button>
+            <button class="chip" type="button" data-filter="commercial" aria-pressed="false">Commercial <span class="chip-count">2</span></button>
+            <button class="chip" type="button" data-filter="short-film" aria-pressed="false">Short Film <span class="chip-count">1</span></button>
+          </div>
+        <!-- FILTERS:films:END -->
+
+        <div class="work-grid">
           <!-- PROJECTS:films:START -->
-          <a class="project-card" href="../projects/honduras-missions-2026.html">
-            <img src="../assets/img/Projects/covers/P1264098.jpg" alt="Honduras Missions 2026" loading="lazy" decoding="async" />
-            <span class="project-num">01</span>
-            <span class="project-label">Honduras Missions 2026</span>
+          <a class="work-card reveal" href="../projects/honduras-missions-2026.html" data-category="documentary">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/P1264098.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="6000" height="4000" srcset="../assets/img/_opt/Projects/covers/P1264098-160.webp 160w, ../assets/img/_opt/Projects/covers/P1264098-480.webp 480w, ../assets/img/_opt/Projects/covers/P1264098-960.webp 960w, ../assets/img/_opt/Projects/covers/P1264098-1600.webp 1600w, ../assets/img/_opt/Projects/covers/P1264098-2400.webp 2400w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/P1264098-2400.webp" /></span>
+            <span class="work-num">01</span>
+            <span class="work-title">Honduras Missions 2026</span>
           </a>
-          <a class="project-card" href="../projects/chronostasis.html">
-            <img src="https://img.youtube.com/vi/SyIsvO3gHiE/hqdefault.jpg" alt="Chronostasis" loading="lazy" decoding="async" />
-            <span class="project-num">02</span>
-            <span class="project-label">Chronostasis</span>
+          <a class="work-card reveal" href="../projects/chronostasis.html" data-category="short-film">
+            <span class="work-media is-video"><img src="https://img.youtube.com/vi/SyIsvO3gHiE/hqdefault.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" /></span>
+            <span class="work-num">02</span>
+            <span class="work-title">Chronostasis</span>
           </a>
-          <a class="project-card" href="../projects/2025-highlight-reel.html">
-            <img src="../assets/img/still-moving/Two dozen/23.jpg" alt="Highlight Reel 2025" loading="lazy" decoding="async" />
-            <span class="project-num">03</span>
-            <span class="project-label">Highlight Reel 2025</span>
+          <a class="work-card reveal" href="../projects/2025-highlight-reel.html" data-category="reel">
+            <span class="work-media is-video"><img src="../assets/img/still-moving/Two%20dozen/23.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="2250" height="1500" srcset="../assets/img/_opt/still-moving/Two-dozen/23-160.webp 160w, ../assets/img/_opt/still-moving/Two-dozen/23-480.webp 480w, ../assets/img/_opt/still-moving/Two-dozen/23-960.webp 960w, ../assets/img/_opt/still-moving/Two-dozen/23-1600.webp 1600w, ../assets/img/_opt/still-moving/Two-dozen/23-2250.webp 2250w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/still-moving/Two-dozen/23-2250.webp" /></span>
+            <span class="work-num">03</span>
+            <span class="work-title">Highlight Reel 2025</span>
           </a>
-          <a class="project-card" href="../projects/senior-signout.html">
-            <img src="../assets/img/Photo Dump/Screenshot 2026-06-23 152253.png" alt="Senior Signout" loading="lazy" decoding="async" />
-            <span class="project-num">04</span>
-            <span class="project-label">Senior Signout</span>
+          <a class="work-card reveal" href="../projects/senior-signout.html" data-category="reel">
+            <span class="work-media is-video"><img src="../assets/img/Photo%20Dump/Screenshot%202026-06-23%20152253.png" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="3204" height="1789" srcset="../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-160.webp 160w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-480.webp 480w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-960.webp 960w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-1600.webp 1600w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-2400.webp 2400w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-152253-2400.webp" /></span>
+            <span class="work-num">04</span>
+            <span class="work-title">Senior Signout</span>
           </a>
-          <a class="project-card" href="../projects/honduras-missions.html">
-            <img src="../assets/img/Projects/covers/honduras-missions-2025.jpg" alt="Honduras Missions 2025" loading="lazy" decoding="async" />
-            <span class="project-num">05</span>
-            <span class="project-label">Honduras Missions 2025</span>
+          <a class="work-card reveal" href="../projects/honduras-missions.html" data-category="documentary">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/honduras-missions-2025.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="2000" height="1333" srcset="../assets/img/_opt/Projects/covers/honduras-missions-2025-160.webp 160w, ../assets/img/_opt/Projects/covers/honduras-missions-2025-480.webp 480w, ../assets/img/_opt/Projects/covers/honduras-missions-2025-960.webp 960w, ../assets/img/_opt/Projects/covers/honduras-missions-2025-1600.webp 1600w, ../assets/img/_opt/Projects/covers/honduras-missions-2025-2000.webp 2000w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/honduras-missions-2025-2000.webp" /></span>
+            <span class="work-num">05</span>
+            <span class="work-title">Honduras Missions 2025</span>
           </a>
-          <a class="project-card" href="../projects/medical-malfeasance.html">
-            <img src="../assets/img/Projects/covers/medical-malfeasance.jpg" alt="Medical Malfeasance: The Thalidomide Tragedy" loading="lazy" decoding="async" />
-            <span class="project-num">06</span>
-            <span class="project-label">Medical Malfeasance: The Thalidomide Tragedy</span>
+          <a class="work-card reveal" href="../projects/medical-malfeasance.html" data-category="documentary">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/medical-malfeasance.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="1600" height="900" srcset="../assets/img/_opt/Projects/covers/medical-malfeasance-160.webp 160w, ../assets/img/_opt/Projects/covers/medical-malfeasance-480.webp 480w, ../assets/img/_opt/Projects/covers/medical-malfeasance-960.webp 960w, ../assets/img/_opt/Projects/covers/medical-malfeasance-1600.webp 1600w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/medical-malfeasance-1600.webp" /></span>
+            <span class="work-num">06</span>
+            <span class="work-title">Medical Malfeasance: The Thalidomide Tragedy</span>
           </a>
-          <a class="project-card" href="../projects/2024-sports-reel.html">
-            <img src="../assets/img/Projects/covers/sports-reel-2024.jpg" alt="Sports Highlight Reel 2024" loading="lazy" decoding="async" />
-            <span class="project-num">07</span>
-            <span class="project-label">Sports Highlight Reel 2024</span>
+          <a class="work-card reveal" href="../projects/2024-sports-reel.html" data-category="reel">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/sports-reel-2024.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="1280" height="720" srcset="../assets/img/_opt/Projects/covers/sports-reel-2024-160.webp 160w, ../assets/img/_opt/Projects/covers/sports-reel-2024-480.webp 480w, ../assets/img/_opt/Projects/covers/sports-reel-2024-960.webp 960w, ../assets/img/_opt/Projects/covers/sports-reel-2024-1280.webp 1280w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/sports-reel-2024-1280.webp" /></span>
+            <span class="work-num">07</span>
+            <span class="work-title">Sports Highlight Reel 2024</span>
           </a>
-          <a class="project-card" href="../projects/fallout.html">
-            <img src="../assets/img/Projects/covers/fallout.jpg" alt="Fallout" loading="lazy" decoding="async" />
-            <span class="project-num">08</span>
-            <span class="project-label">Fallout</span>
+          <a class="work-card reveal" href="../projects/fallout.html" data-category="documentary">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/fallout.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="1600" height="900" srcset="../assets/img/_opt/Projects/covers/fallout-160.webp 160w, ../assets/img/_opt/Projects/covers/fallout-480.webp 480w, ../assets/img/_opt/Projects/covers/fallout-960.webp 960w, ../assets/img/_opt/Projects/covers/fallout-1600.webp 1600w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/fallout-1600.webp" /></span>
+            <span class="work-num">08</span>
+            <span class="work-title">Fallout</span>
           </a>
-          <a class="project-card" href="../projects/charming.html">
-            <img src="../assets/img/Projects/covers/charming-commercial.jpg" alt="Charming" loading="lazy" decoding="async" />
-            <span class="project-num">09</span>
-            <span class="project-label">Charming</span>
+          <a class="work-card reveal" href="../projects/charming.html" data-category="commercial">
+            <span class="work-media is-video"><img src="../assets/img/Projects/covers/charming-commercial.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="1920" height="1080" srcset="../assets/img/_opt/Projects/covers/charming-commercial-160.webp 160w, ../assets/img/_opt/Projects/covers/charming-commercial-480.webp 480w, ../assets/img/_opt/Projects/covers/charming-commercial-960.webp 960w, ../assets/img/_opt/Projects/covers/charming-commercial-1600.webp 1600w, ../assets/img/_opt/Projects/covers/charming-commercial-1920.webp 1920w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Projects/covers/charming-commercial-1920.webp" /></span>
+            <span class="work-num">09</span>
+            <span class="work-title">Charming</span>
           </a>
-          <a class="project-card" href="../projects/cube-setup.html">
-            <img src="../assets/img/Photo Dump/Screenshot 2026-06-23 153802.png" alt="CubingUSA Nationals 2023 Doc" loading="lazy" decoding="async" />
-            <span class="project-num">10</span>
-            <span class="project-label">CubingUSA Nationals 2023 Doc</span>
+          <a class="work-card reveal" href="../projects/cube-setup.html" data-category="documentary">
+            <span class="work-media is-video"><img src="../assets/img/Photo%20Dump/Screenshot%202026-06-23%20153802.png" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" width="3835" height="1998" srcset="../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-160.webp 160w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-480.webp 480w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-960.webp 960w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-1600.webp 1600w, ../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-2400.webp 2400w" sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" data-full="../assets/img/_opt/Photo-Dump/Screenshot-2026-06-23-153802-2400.webp" /></span>
+            <span class="work-num">10</span>
+            <span class="work-title">CubingUSA Nationals 2023 Doc</span>
           </a>
-          <a class="project-card" href="../projects/dr-missions.html">
-            <img src="https://drive.google.com/thumbnail?id=1zeTSLMfiBp50RBZEMEzfjPHsooL1Zsvf&amp;sz=w1200" alt="Dominican Republic Missions" loading="lazy" decoding="async" />
-            <span class="project-num">11</span>
-            <span class="project-label">Dominican Republic Missions</span>
+          <a class="work-card reveal" href="../projects/dr-missions.html" data-category="documentary">
+            <span class="work-media is-video"><img src="https://drive.google.com/thumbnail?id=1zeTSLMfiBp50RBZEMEzfjPHsooL1Zsvf&amp;sz=w960" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" /></span>
+            <span class="work-num">11</span>
+            <span class="work-title">Dominican Republic Missions</span>
           </a>
-          <a class="project-card" href="../projects/triple-z-pillow.html">
-            <img src="https://img.youtube.com/vi/sLV9mgjY2XE/hqdefault.jpg" alt="Triple Z Pillow" loading="lazy" decoding="async" />
-            <span class="project-num">12</span>
-            <span class="project-label">Triple Z Pillow</span>
+          <a class="work-card reveal" href="../projects/triple-z-pillow.html" data-category="commercial">
+            <span class="work-media is-video"><img src="https://img.youtube.com/vi/sLV9mgjY2XE/hqdefault.jpg" alt="" loading="lazy" decoding="async" data-sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw" /></span>
+            <span class="work-num">12</span>
+            <span class="work-title">Triple Z Pillow</span>
           </a>
           <!-- PROJECTS:films:END -->
         </div>
       </div>
     </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="contact" aria-label="Contact">
-      <div class="container">
-        <h2>Contact</h2>
-        <div class="contact-links">
-          <a class="contact-link" href="mailto:Daviddwnoh@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" />
-            </svg>
-            <span>Daviddwnoh@gmail.com</span>
-          </a>
-          <a class="contact-link" href="https://instagram.com/davidnfilms" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" />
-            </svg>
-            <span>@davidnfilms</span>
-          </a>
-          <a class="contact-link" href="https://www.youtube.com/@Davidnfilms25" aria-label="YouTube" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true">
-              <rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" />
-            </svg>
-            <span>youtube.com/@Davidnfilms25</span>
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <script src="../js/main.js"></script>
+  <!-- SHARED:footer:START -->
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title" class="contact-title">Contact</h2>
+      <ul class="contact-links">
+        <li><a href="mailto:Daviddwnoh@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18v12H3z" /><path d="m3 7 9 6 9-6" /></svg>
+          <span>Daviddwnoh@gmail.com</span>
+        </a></li>
+        <li><a href="https://instagram.com/davidnfilms" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><circle cx="12" cy="12" r="3.5" /><circle cx="17" cy="7" r="1" /></svg>
+          <span>@davidnfilms</span><span class="sr-only"> on Instagram (opens in a new tab)</span>
+        </a></li>
+        <li><a href="https://www.youtube.com/@Davidnfilms25" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" /><path d="m11 10 4 2-4 2z" fill="currentColor" stroke="none" /></svg>
+          <span>youtube.com/@Davidnfilms25</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/daviddwnoh" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="16" height="16" /><path d="M8.5 10.5v5M8.5 8v.01M12 15.5v-5M12 13c0-1.5 1-2.5 2.2-2.5s1.8.8 1.8 2.3v2.7" /></svg>
+          <span>linkedin.com/in/daviddwnoh</span><span class="sr-only"> (opens in a new tab)</span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 David Noh</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../privacy/index.html">Privacy</a>
+        <a href="../privacy/index.html#accessibility">Accessibility</a>
+        <a href="#top">Back to top</a>
+      </nav>
+    </div>
+  </footer>
+  <!-- SHARED:footer:END -->
 </body>
 </html>

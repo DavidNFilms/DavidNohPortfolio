@@ -2,6 +2,7 @@
 title:        Charming
 subtitle:     A brand commercial for Virtual Enterprise
 section:      films          # photos | films | xr  (which portfolio it appears in)
+category:     Commercial
 date:         2024-02-01     # YYYY-MM-DD — newest projects list first
 
 # Local cover frame pulled from the commercial (also the section thumbnail).
